@@ -185,6 +185,12 @@ function getAllMenu(){
 					array('name' => '订单促销', 'act'=>'prom_order_list', 'control'=>'Promotion'),
 					array('name' => '代金券','act'=>'index', 'control'=>'Coupon'),
 			)),
+        'content' => array('name' => '内容管理', 'icon'=>'fa-bell', 'sub_menu' => array(
+            //array('name' => '抢购管理', 'act'=>'flash_sale', 'control'=>'Promotion'),
+            array('name' => '文章管理', 'act'=>'articlelist', 'control'=>'Article'),
+            array('name' => '文章分类', 'act'=>'categoryList', 'control'=>'Article'),
+
+        )),
 			
 			
 			

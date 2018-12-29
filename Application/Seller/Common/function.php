@@ -166,7 +166,7 @@ function getMenuList() {
 					array('name' => '账号日志', 'act'=>'log', 'op'=>'Admin'),
 					//array('name' => '店铺消费', 'act'=>'store_cost', 'op'=>'cost_list'),
 			)),
-                        // http://www.tpshop.com/Admin/Distribut/remittance
+                       
 			'finance' => array('name' => '财务管理', 'icon'=>'fa-book', 'child' => array(
 					array('name' => '提现申请', 'act'=>'withdrawals', 'op'=>'Finance'),
 					array('name' => '汇款记录', 'act'=>'remittance', 'op'=>'Finance'),
