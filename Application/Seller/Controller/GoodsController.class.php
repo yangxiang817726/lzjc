@@ -384,17 +384,20 @@ class GoodsController extends BaseController {
      * 动态获取商品规格选择框 根据不同的数据返回不同的选择框
      */
     public function ajaxGetSpecSelect(){
+
         $goods_id = I('goods_id',0);
-        $cat_id3 = I('cat_id3',0);
-        empty($cat_id3) && exit('');
+        $cat_id2 = I('cat_id2',0);
+        empty($cat_id2) && exit('');
         $goods_id = $goods_id ? $goods_id : 0;
-        
-        $type_id = M('goods_category')->where("id = $cat_id3")->getField('type_id'); // 找到这个分类对应的type_id
-        empty($type_id) && exit('');
-        $spec_id_arr = M('spec_type')->where("type_id = $type_id")->getField('spec_id',true); // 找出这个类型的 所有 规格id 
-        empty($spec_id_arr) && exit('');
-        
-        $specList = D('Spec')->where("id in (".  implode(',',$spec_id_arr).") ")->order('`order` desc')->select(); // 找出这个类型的所有规格
+
+        $specList = M('spec')->where(" cat_id2 =(".$cat_id2.")")->getField('id,name,cat_id1,cat_id2');
+        if(empty($specList)){
+            $this->display('nobindspec');die;
+        }
+
+
+
+
         foreach($specList as $k => $v)        
             $specList[$k]['spec_item'] = D('SpecItem')->where("store_id = ".STORE_ID." and spec_id = ".$v['id'])->getField('id,item'); // 获取规格项                
         
@@ -499,18 +502,28 @@ class GoodsController extends BaseController {
      */
     public function ajaxSpecList(){ 
         //ob_start('ob_gzhandler'); // 页面压缩输出
-        $cat_id3 = I('cat_id3',0); 
+        $cat_id2 = I('cat_id2',0);
         $spec_id = I('spec_id',0);
-        $type_id = M('goods_category')->where("id = $cat_id3")->getField('type_id'); // 获取这个分类对应的类型
-        if(empty($cat_id3) || empty($type_id)) exit('');
+//        $type_id = M('goods_category')->where("id = $cat_id2")->getField('type_id'); // 获取这个分类对应的类型
+//        if(empty($cat_id2) || empty($type_id)) exit('');
         
-        $spec_id_arr = M('spec_type')->where("type_id = $type_id")->getField('spec_id',true); // 获取这个类型所拥有的规格
-        if(empty($spec_id_arr)) exit('');
+//        $spec_id_arr = M('spec_type')->where("type_id = $type_id")->getField('spec_id',true); // 获取这个类型所拥有的规格
+//        if(empty($spec_id_arr)) exit('');
         
-        $spec_id = $spec_id ? $spec_id : $spec_id_arr[0]; //没有传值则使用第一个
+
         
-        $specList = M('spec')->where(" id in(".  implode(',', $spec_id_arr).")")->getField('id,name,cat_id1,cat_id2,cat_id3');        
-        $specItemList = M('spec_item')->where("store_id = ".STORE_ID." and spec_id = $spec_id")->order('id')->select(); // 获取这个类型所拥有的规格                        
+        $specList = M('spec')->where(" cat_id2 =(".$cat_id2.")")->getField('id,name,cat_id1,cat_id2');
+        if(empty($specList)){
+            $this->display('nobindspec');die;
+        }
+
+        foreach($specList as $key=>$val){
+            $spec_id1=$val['id'];break;
+        }
+        $spec_id = $spec_id ? $spec_id : $spec_id1; //没有传值则使用第一个
+
+        $specItemList = M('spec_item')->where("store_id = ".STORE_ID." and spec_id = $spec_id")->order('id')->select(); // 获取这个类型所拥有的规格
+
         //I('cat_id1')   && $where = "$where and cat_id1 = ".I('cat_id1') ;                       
         $this->assign('spec_id',$spec_id);
         $this->assign('specList',$specList);

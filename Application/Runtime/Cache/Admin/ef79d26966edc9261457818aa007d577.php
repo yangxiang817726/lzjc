@@ -121,23 +121,24 @@
 	                                        <option value="0">请选择分类</option>                                        
                                             <?php if(is_array($cat_list)): foreach($cat_list as $key=>$v): ?><option value="<?php echo ($v[id]); ?>"  <?php if($v[id] == $spec[cat_id1]): ?>selected="selected"<?php endif; ?>><?php echo ($v[name]); ?></option><?php endforeach; endif; ?>											
                                          </select>
-	                                      <select name="cat_id2" id="cat_id2" onchange="get_category(this.value,'cat_id3','0');"  class="form-control" style="width:250px;">
+	                                      <!--<select name="cat_id2" id="cat_id2" onchange="get_category(this.value,'cat_id3','0');"  class="form-control" style="width:250px;">-->
+                                        <select name="cat_id2" id="cat_id2"   class="form-control" style="width:250px;">
 	                                        <option value="0">请选择分类</option>
 	                                      </select>
-	                                      <select name="cat_id3" id="cat_id3"  class="form-control" style="width:250px;">
-	                                        <option value="0">请选择分类</option>
-	                                      </select>                                                                                   
+	                                      <!--<select name="cat_id3" id="cat_id3"  class="form-control" style="width:250px;">-->
+	                                        <!--<option value="0">请选择分类</option>-->
+	                                      <!--</select>                                                                                   -->
                                     </td>
                                 </tr>  
                                 
-                                <tr style="display:none;">
-                                    <td>能否进行检索：</td>
-                                    <td>
-                                        <input type="radio" value="0" name="search_index" <?php if($spec[search_index] == 0): ?>checked="checked"<?php endif; ?>  .>不需要检索
-                                        <input type="radio" value="1" name="search_index" <?php if(($spec[search_index] == 1) or ($spec[search_index] == NULL)): ?>checked="checked"<?php endif; ?>  />关键字检索
-                                        <!--<input type="radio" value="2" name="search_index" <?php if($spec[search_index] == 2): ?>checked="checked"<?php endif; ?>  />范围检索-->
-                                    </td>
-                                </tr>                                
+                                <!--<tr style="display:none;">-->
+                                    <!--<td>能否进行检索：</td>-->
+                                    <!--<td>-->
+                                        <!--<input type="radio" value="0" name="search_index" <?php if($spec[search_index] == 0): ?>checked="checked"<?php endif; ?>  .>不需要检索-->
+                                        <!--<input type="radio" value="1" name="search_index" <?php if(($spec[search_index] == 1) or ($spec[search_index] == NULL)): ?>checked="checked"<?php endif; ?>  />关键字检索-->
+                                        <!--&lt;!&ndash;<input type="radio" value="2" name="search_index" <?php if($spec[search_index] == 2): ?>checked="checked"<?php endif; ?>  />范围检索&ndash;&gt;-->
+                                    <!--</td>-->
+                                <!--</tr>                                -->
                                 <tr>
                                     <td>排序：</td>
                                     <td>

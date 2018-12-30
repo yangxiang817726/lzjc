@@ -1002,7 +1002,7 @@ class Model {
             $this->error = L('_DATA_TYPE_INVALID_');
             return false;
         }
-
+        
         // 状态
         $type = $type?:(!empty($data[$this->getPk()])?self::MODEL_UPDATE:self::MODEL_INSERT);
 

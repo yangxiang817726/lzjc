@@ -174,18 +174,18 @@
                                       </select>
                                       </div>
                                       <div class="col-xs-3">
-                                      <select name="cat_id2" id="cat_id2" onchange="get_category2(this.value,'cat_id3','0');" class="form-control" style="width:250px;margin-left:-15px;">
+                                      <select name="cat_id2" id="cat_id2"  class="form-control" style="width:250px;margin-left:-15px;">
                                         <option value="0">请选择商品分类</option>
                                       </select>  
                                       </div>
-                                      <div class="col-xs-3">                        
-                                      <select name="cat_id3" id="cat_id3" class="form-control" style="width:250px;margin-left:-15px;">
-                                        <option value="0">请选择商品分类</option>
-                                      </select> 
-                                      </div>    
+                                      <!--<div class="col-xs-3">                        -->
+                                      <!--<select name="cat_id3" id="cat_id3" class="form-control" style="width:250px;margin-left:-15px;">-->
+                                        <!--<option value="0">请选择商品分类</option>-->
+                                      <!--</select> -->
+                                      <!--</div>    -->
                                       <span id="err_cat_id1" style="color:#F00; display:none;"></span>                                      
                                       <span id="err_cat_id2" style="color:#F00; display:none;"></span>
-                                      <span id="err_cat_id3" style="color:#F00; display:none;"></span>
+                                      <!--<span id="err_cat_id3" style="color:#F00; display:none;"></span>-->
                                     </td>
                                 </tr>                                 
                                 <tr hidden>
@@ -538,13 +538,13 @@ function delAttr(a)
 /**
 * ajax 加载规格 和属性
 */
-function ajaxGetSpecAttr(goods_id,cat_id3)
+function ajaxGetSpecAttr(goods_id,cat_id2)
 {
 	// ajax调用 返回规格
 	$.ajax({
 			type:'GET',
-//			data:{goods_id:goods_id,cat_id3:cat_id3}, 
-			url:"/index.php?m=Seller&c=Goods&a=ajaxGetSpecSelect&goods_id="+goods_id+"&cat_id3="+cat_id3,
+//			data:{goods_id:goods_id,cat_id2:cat_id2},
+			url:"/index.php?m=Seller&c=Goods&a=ajaxGetSpecSelect&goods_id="+goods_id+"&cat_id2="+cat_id2,
 			success:function(data){                            
 				   $("#ajax_spec_data").html('');
 				   $("#ajax_spec_data").append(data);
@@ -556,8 +556,8 @@ function ajaxGetSpecAttr(goods_id,cat_id3)
 	// 商品类型切换时 ajax 调用  返回不同的属性输入框					
 	$.ajax({
 			type:'GET',
-//			data:{goods_id:goods_id,cat_id3:cat_id3},
-			url:"/index.php?m=Seller&c=Goods&a=ajaxGetAttrInput&goods_id="+goods_id+"&cat_id3="+cat_id3,			
+//			data:{goods_id:goods_id,cat_id2:cat_id2},
+			url:"/index.php?m=Seller&c=Goods&a=ajaxGetAttrInput&goods_id="+goods_id+"&cat_id2="+cat_id2,
 			success:function(data){                            
 					$("#goods_attr_table tr:gt(0)").remove();
 					$("#goods_attr_table").append(data);
@@ -575,9 +575,9 @@ $(document).ready(function(){
 	</if>
 	
 	// 商品分类第三个下拉菜单	
-	<if condition="$goodsInfo['cat_id3'] gt 0">
-		 get_category2("{$goodsInfo['cat_id2']}",'cat_id3',"{$goodsInfo['cat_id3']}");	 
-	</if>
+	// <if condition="$goodsInfo['cat_id3'] gt 0">
+	// 	 get_category2("{$goodsInfo['cat_id2']}",'cat_id3',"{$goodsInfo['cat_id3']}");
+	// </if>
 
 	// 店铺内部分类
 	<if condition="$goodsInfo['store_cat_id2'] gt 0">
@@ -585,9 +585,9 @@ $(document).ready(function(){
 	</if>
 			 
 	// 如果是编辑的时候 加载 规格 和属性
-	<if condition="$goodsInfo['cat_id3'] gt 0">	
-		ajaxGetSpecAttr({$goodsInfo['goods_id']},{$goodsInfo['cat_id3']});
-	</if>			
+	// <if condition="$goodsInfo['cat_id3'] gt 0">
+	// 	ajaxGetSpecAttr({$goodsInfo['goods_id']},{$goodsInfo['cat_id3']});
+	// </if>
 	
 	// 商品品牌根据分类显示相关的品牌
 	$('#brand_id option').each(function(){
@@ -611,12 +611,12 @@ $("#cat_id1").change(function(){
 });
 
 // 商品类型切换时 ajax 调用  返回不同的属性输入框
-$("#cat_id3").change(function(){        
+$("#cat_id2").change(function(){
 		var goods_id = '{$goodsInfo.goods_id}';
-		var cat_id3 = $(this).val();
-		if(cat_id3 == 0)
+		var cat_id2 = $(this).val();
+		if(cat_id2 == 0)
 		 return false;
-		 ajaxGetSpecAttr(goods_id,cat_id3);        
+		 ajaxGetSpecAttr(goods_id,cat_id2);
 });
 	
 function get_store_category(id,next,select_id){

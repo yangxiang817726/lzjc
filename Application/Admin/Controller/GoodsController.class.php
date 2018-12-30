@@ -345,8 +345,11 @@ class GoodsController extends BaseController {
                         
                         M('spec_type')->where("type_id = $id")->delete(); // 先把类型规格 表对应的 删除掉 然后再重新添加
                         M('spec_type')->addAll($dataList);                       
-                    }  
-                    
+                    }
+                    $map['id']=$_POST['cat_id3'];
+                    $map['type_id']=$id;
+                    //商品分类关联规格
+                    M('goods_category')->save($map);
                     // 类型品牌对应关系表
                     if($id && !empty($_POST['brand_id']))
                     {
@@ -768,8 +771,17 @@ class GoodsController extends BaseController {
             $model = D("spec");                      
             $type = $_POST['id'] > 0 ? 2 : 1; // 标识自动验证时的 场景 1 表示插入 2 表示更新             
             if(($_GET['is_ajax'] == 1) && IS_POST)//ajax提交验证
-            {                
-                C('TOKEN_ON',false);
+            {
+                C('TOKEN_ON', false);
+                if (empty($_POST['cat_id2'])) {
+
+                $return_arr = array(
+                    'status' => -1,
+                    'msg' => '请选择到二级分类',
+                    'data' => $model->getError(),
+                );
+                $this->ajaxReturn(json_encode($return_arr));
+            }
                 if(!$model->create(NULL,$type))// 根据表单提交的POST数据创建数据对象                 
                 {
                     //  编辑

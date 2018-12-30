@@ -43,23 +43,24 @@
                                                 <option value="{$v[id]}"  <if condition="$v[id] eq $spec[cat_id1]"> selected="selected" </if>>{$v[name]}</option>
                                             </foreach>											
                                          </select>
-	                                      <select name="cat_id2" id="cat_id2" onchange="get_category(this.value,'cat_id3','0');"  class="form-control" style="width:250px;">
+	                                      <!--<select name="cat_id2" id="cat_id2" onchange="get_category(this.value,'cat_id3','0');"  class="form-control" style="width:250px;">-->
+                                        <select name="cat_id2" id="cat_id2"   class="form-control" style="width:250px;">
 	                                        <option value="0">请选择分类</option>
 	                                      </select>
-	                                      <select name="cat_id3" id="cat_id3"  class="form-control" style="width:250px;">
-	                                        <option value="0">请选择分类</option>
-	                                      </select>                                                                                   
+	                                      <!--<select name="cat_id3" id="cat_id3"  class="form-control" style="width:250px;">-->
+	                                        <!--<option value="0">请选择分类</option>-->
+	                                      <!--</select>                                                                                   -->
                                     </td>
                                 </tr>  
                                 
-                                <tr style="display:none;">
-                                    <td>能否进行检索：</td>
-                                    <td>
-                                        <input type="radio" value="0" name="search_index" <if condition="$spec[search_index] eq 0">checked="checked"</if>  .>不需要检索
-                                        <input type="radio" value="1" name="search_index" <if condition="($spec[search_index] eq 1) or ($spec[search_index] eq NULL)">checked="checked"</if>  />关键字检索
-                                        <!--<input type="radio" value="2" name="search_index" <if condition="$spec[search_index] eq 2">checked="checked"</if>  />范围检索-->
-                                    </td>
-                                </tr>                                
+                                <!--<tr style="display:none;">-->
+                                    <!--<td>能否进行检索：</td>-->
+                                    <!--<td>-->
+                                        <!--<input type="radio" value="0" name="search_index" <if condition="$spec[search_index] eq 0">checked="checked"</if>  .>不需要检索-->
+                                        <!--<input type="radio" value="1" name="search_index" <if condition="($spec[search_index] eq 1) or ($spec[search_index] eq NULL)">checked="checked"</if>  />关键字检索-->
+                                        <!--&lt;!&ndash;<input type="radio" value="2" name="search_index" <if condition="$spec[search_index] eq 2">checked="checked"</if>  />范围检索&ndash;&gt;-->
+                                    <!--</td>-->
+                                <!--</tr>                                -->
                                 <tr>
                                     <td>排序：</td>
                                     <td>

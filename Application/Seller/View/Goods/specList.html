@@ -21,12 +21,12 @@
                            <option value="{$v['id']}">{$v['name']}</option>
 			            </foreach>
                    </select> 
-                  <select name="cat_id2" id="cat_id2" onchange="get_category(this.value,'cat_id3','0');" class="form-control" style="width:250px;">
+                  <select name="cat_id2" id="cat_id2"  class="form-control" style="width:250px;">
                     <option value="0">请选择商品分类</option>
                   </select>
-                  <select name="cat_id3" id="cat_id3" class="form-control" style="width:250px;">
-                    <option value="0">请选择商品分类</option>
-                  </select>	                     
+                  <!--<select name="cat_id3" id="cat_id3" class="form-control" style="width:250px;">-->
+                    <!--<option value="0">请选择商品分类</option>-->
+                  <!--</select>	                     -->
  				</div>
                 <button type="button" id="button-filter2" class="btn btn-primary pull-right">
                  <i class="fa fa-plus"></i> 添加规格
@@ -55,7 +55,7 @@
 function ajax_get_data(spec_id){
 		 $.ajax({
                 type : "GET",
-                url:"/index.php?m=Seller&c=goods&a=ajaxSpecList&cat_id3="+$("#cat_id3").val()+"&spec_id="+spec_id,//+tab,                 
+                url:"/index.php?m=Seller&c=goods&a=ajaxSpecList&cat_id2="+$("#cat_id2").val()+"&spec_id="+spec_id,//+tab,
                 success: function(data){
                     $("#ajax_return").html('');
                     $("#ajax_return").append(data);
@@ -64,7 +64,7 @@ function ajax_get_data(spec_id){
 } 		 	
 	 
 // 商品类型切换时 ajax 调用  返回不同的属性输入框
-$("#cat_id3").change(function(){
+$("#cat_id2").change(function(){
 	ajax_get_data(0);
 });
 /**
