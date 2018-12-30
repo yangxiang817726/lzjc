@@ -1,0 +1,15 @@
+<ul class="nav nav-tabs">
+  <volist name="specList" id="list">
+	  <li class="active"><a data-toggle="tab" href="javascript:void(0);" onclick="ajax_get_data({$list[id]});">{$list.name}</a></li>
+  </volist>    
+</ul>          
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover" id="spec_item_table">
+            <thead>
+            <tr>
+               平台没有绑定规格名称
+            </tr>
+            </tbody>
+        </table>
+
+    </div>
