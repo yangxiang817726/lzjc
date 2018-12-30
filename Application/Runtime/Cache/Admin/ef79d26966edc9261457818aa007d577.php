@@ -166,8 +166,7 @@
 window.onload = function(){ 	
 	<?php if($spec['cat_id2'] > 0): ?>// 商品分类第二个下拉菜单
 		 get_category('<?php echo ($spec[cat_id1]); ?>','cat_id2','<?php echo ($spec[cat_id2]); ?>');<?php endif; ?>
-	<?php if($spec['cat_id3'] > 0): ?>// 商品分类第二个下拉菜单
-		 get_category('<?php echo ($spec[cat_id2]); ?>','cat_id3','<?php echo ($spec[cat_id3]); ?>');<?php endif; ?>   	
+	
 }
 </script>
 </body>

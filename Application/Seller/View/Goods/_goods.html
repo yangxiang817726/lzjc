@@ -113,8 +113,9 @@
                         <li class="active"><a href="#tab_tongyong" data-toggle="tab">通用信息</a></li>
 <!--                        <li><a href="#tab_goods_desc" data-toggle="tab">描述信息</a></li>-->
                         <li><a href="#tab_goods_images" data-toggle="tab">商品相册</a></li>
-                        <li><a href="#tab_goods_spec" data-toggle="tab">商品规格</a></li>                        
-                        
+                        <li><a href="#tab_goods_spec" data-toggle="tab">商品规格</a></li>
+                        <li><a href="#tab_goods_attr" data-toggle="tab">属性</a></li>
+
                     </ul>
                     <!--表单数据-->
                     <form method="post" id="addEditGoodsForm">
@@ -341,7 +342,7 @@
                                 <tr>
                                     <td>商品详情描述（逗号隔开 举例  长:3米，宽5米）:</td>
                                     <td width="85%">
-										<input class="span12 ckeditor" style="width:550px;" id="goods_content" name="goods_content" title="" value="{$goodsInfo.goods_content}"></input>
+										<textarea class="span12 ckeditor" style="width:550px;" id="goods_content" name="goods_content" title="" >{$goodsInfo.goods_content}</textarea>
                                         <span id="err_goods_content" style="color:#F00; display:none;"></span>                                         
                                     </td>                                                                       
                                 </tr>   
@@ -585,9 +586,9 @@ $(document).ready(function(){
 	</if>
 			 
 	// 如果是编辑的时候 加载 规格 和属性
-	// <if condition="$goodsInfo['cat_id3'] gt 0">
-	// 	ajaxGetSpecAttr({$goodsInfo['goods_id']},{$goodsInfo['cat_id3']});
-	// </if>
+	<if condition="$goodsInfo['cat_id2'] gt 0">
+		ajaxGetSpecAttr({$goodsInfo['goods_id']},{$goodsInfo['cat_id2']});
+	</if>
 	
 	// 商品品牌根据分类显示相关的品牌
 	$('#brand_id option').each(function(){

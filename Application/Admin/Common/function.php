@@ -152,7 +152,7 @@ function getAllMenu(){
 			'goods' => array('name' => '商品管理', 'icon'=>'fa-tasks', 'sub_menu' => array(
 					array('name' => '商品分类', 'act'=>'categoryList', 'control'=>'Goods'),
 					array('name' => '商品列表', 'act'=>'goodsList', 'control'=>'Goods'),
-					array('name' => '商品类型', 'act'=>'goodsTypeList', 'control'=>'Goods'),
+					array('name' => '商品属性', 'act'=>'goodsTypeList', 'control'=>'Goods'),
 					array('name' => '商品规格', 'act' =>'specList', 'control' => 'Goods'),
 					
 			)),

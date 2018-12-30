@@ -326,40 +326,42 @@ class GoodsController extends BaseController {
             $model = M("GoodsType");           
             if(IS_POST)
             {
-                    $model->create();
-                    // 编辑操作
-                    if($id){                        
-                        $model->save();                         
-                    }                        
+                if (empty($_POST['cat_id2'])) {
+
+                    $this->error("请选择到二级分类!");
+                }
+                    if($id){
+                        $model->save();
+                    }
                     else // 添加操作
                     {
-                        $id = $model->add();                        
+                        $id = $model->add();
                     }
-                    
-                    // 类型规格对应关系表
-                    if($id && !empty($_POST['spec_id']))
-                    {
-                        $dataList = array();
-                        foreach($_POST['spec_id'] as $k => $v)                        
-                          $dataList[] = array('type_id'=>$id,'spec_id'=>$v);
-                        
-                        M('spec_type')->where("type_id = $id")->delete(); // 先把类型规格 表对应的 删除掉 然后再重新添加
-                        M('spec_type')->addAll($dataList);                       
-                    }
-                    $map['id']=$_POST['cat_id3'];
+//
+//                    // 类型规格对应关系表
+//                    if($id && !empty($_POST['spec_id']))
+//                    {
+//                        $dataList = array();
+//                        foreach($_POST['spec_id'] as $k => $v)
+//                          $dataList[] = array('type_id'=>$id,'spec_id'=>$v);
+//
+//                        M('spec_type')->where("type_id = $id")->delete(); // 先把类型规格 表对应的 删除掉 然后再重新添加
+//                        M('spec_type')->addAll($dataList);
+//                    }
+                    $map['id']=$_POST['cat_id2'];
                     $map['type_id']=$id;
                     //商品分类关联规格
                     M('goods_category')->save($map);
                     // 类型品牌对应关系表
-                    if($id && !empty($_POST['brand_id']))
-                    {
-                        $dataList = array();
-                        foreach($_POST['brand_id'] as $k => $v)                        
-                          $dataList[] = array('type_id'=>$id,'brand_id'=>$v);
-                        
-                        M('brand_type')->where("type_id = $id")->delete(); // 先把类型规格 表对应的 删除掉 然后再重新添加
-                        M('brand_type')->addAll($dataList);                       
-                    }
+//                    if($id && !empty($_POST['brand_id']))
+//                    {
+//                        $dataList = array();
+//                        foreach($_POST['brand_id'] as $k => $v)
+//                          $dataList[] = array('type_id'=>$id,'brand_id'=>$v);
+//
+//                        M('brand_type')->where("type_id = $id")->delete(); // 先把类型规格 表对应的 删除掉 然后再重新添加
+//                        M('brand_type')->addAll($dataList);
+//                    }
                     // 处理商品属性
                     if($id && !empty($_POST['attr_name']))
                     {
@@ -375,7 +377,7 @@ class GoodsController extends BaseController {
                                 'type_id'=>$id,
                                 'attr_index'=>$_POST['attr_index'][$k],
                                 'attr_values'=>$_POST['attr_values'][$k],    
-                                'attr_input_type'=>'1',
+                                'attr_input_type'=>'0',
                                 'order'=>$_POST['order'][$k],  
                                 );
                             if(empty($_POST['attr_id'][$k]))

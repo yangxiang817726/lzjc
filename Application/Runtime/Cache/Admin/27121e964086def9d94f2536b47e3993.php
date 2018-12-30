@@ -86,12 +86,12 @@
     <div class="container-fluid">
       <div class="panel panel-default">
         <div class="panel-heading">
-          <h3 class="panel-title"><i class="fa fa-list"></i> 商品类型列表</h3>
+          <h3 class="panel-title"><i class="fa fa-list"></i> 商品属性列表</h3>
         </div>
         <div class="panel-body">    
 		<div class="navbar navbar-default">
             <div class="row navbar-form">
-                <button type="submit" onclick="location.href='<?php echo U('Admin/goods/addEditGoodsType');?>'"  class="btn btn-primary pull-right"><i class="fa fa-plus"></i>新增商品类型</button>
+                <button type="submit" onclick="location.href='<?php echo U('Admin/goods/addEditGoodsType');?>'"  class="btn btn-primary pull-right"><i class="fa fa-plus"></i>新增商品属性</button>
             </div>
           </div>
                         
@@ -101,7 +101,7 @@
                             <thead>
                             <tr>
                                 <th class="sorting text-center">ID</th>                                
-                                <th class="sorting text-center">类型名</th>
+                                <th class="sorting text-center">属性名</th>
                                 <th class="sorting text-center">操作</th>
                             </tr>
                             </thead>

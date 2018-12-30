@@ -18,14 +18,14 @@
             </div>
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <h3 class="panel-title"><i class="fa fa-list"></i> 类型关联</h3>
+                    <h3 class="panel-title"><i class="fa fa-list"></i> 属性关联</h3>
                 </div>
                 <form method="post" id="addEditGoodsTypeForm" onsubmit="return checkgoodsTypeName();">                                    
                 <div class="panel-body">
                 
-                    <!--商品类型-->                
+                    <!--商品属性-->                
                     <ul class="nav nav-tabs">
-                        <li class="active"><a href="#tab_tongyong" data-toggle="tab">商品类型</a></li>
+                        <li class="active"><a href="#tab_tongyong" data-toggle="tab">商品属性</a></li>
                     </ul>
                     <div class="tab-content">                 	  
                         <div class="tab-pane active" id="tab_tongyong">
@@ -33,10 +33,10 @@
                             <table class="table table-bordered">
                                 <tbody>
                                 <tr>
-                                    <td>类型名称:</td>
+                                    <td>属性名称:</td>
                                     <td>
                                         <input type="text" value="{$goodsType.name}" name="name" class="form-control" style="width:300px;"/>
-                                        <span id="err_name" style="color:#F00; display:none;">商品类型名称不能为空!!</span>
+                                        <span id="err_name" style="color:#F00; display:none;">商品属性名称不能为空!!</span>
                                     </td>
                                 </tr>  
                                 
@@ -54,15 +54,15 @@
                                       </select>
                                       </div>
                                       <div class="col-xs-3">
-                                      <select name="cat_id2" id="cat_id2" onchange="get_category(this.value,'cat_id3','0');" class="form-control" style="margin-left:-15px;">
+                                      <select name="cat_id2" id="cat_id2"  class="form-control" style="margin-left:-15px;">
                                         <option value="0">请选择商品分类</option>
                                       </select>  
                                       </div>
-                                      <div class="col-xs-3">                        
-                                      <select name="cat_id3" id="cat_id3" class="form-control" style="width:250px;margin-left:-15px;">
-                                        <option value="0">请选择商品分类</option>
-                                      </select> 
-                                      </div>    
+                                      <!--<div class="col-xs-3">                        -->
+                                      <!--<select name="cat_id2" id="cat_id2" class="form-control" style="width:250px;margin-left:-15px;">-->
+                                        <!--<option value="0">请选择商品分类</option>-->
+                                      <!--</select> -->
+                                      <!--</div>    -->
                                       <span id="err_cat_id" style="color:#F00; display:none;"></span>                                 
                                     </td>
                                 </tr>                            
@@ -70,98 +70,8 @@
                                 </table>
                         </div>                           
                     </div>  
-                    <!--商品类型 end-->     
-                    <!--关联规格-->                
-                    <ul class="nav nav-tabs">
-                        <li class="active"><a href="#tab_tongyong" data-toggle="tab">关联规格</a></li>
-                    </ul>
-                    <div class="tab-content">                 	  
-                        <div class="tab-pane active" id="tab_tongyong">
-                           
-                            <table class="table table-bordered">
-                                <tbody>                                                                   
-                                <tr>
-                                    <td>分类检索：</td>
-                                    <td>
-                                      <div class="col-xs-3">
-                                      <select name="spec_cat_id1" id="spec_cat_id1" onchange="get_category(this.value,'spec_cat_id2','0');spec_scroll(this);" class="form-control" style="width:250px;margin-left:-15px;">
-                                        <option value="0">请选择商品分类</option>                                      
-                                             <foreach name="cat_list" item="v" key="k" >                                                                                          
-                                               <option value="{$v['id']}">
-                                               		{$v['name']}
-                                               </option>
-                                             </foreach>
-                                      </select>
-                                      </div>
-                                      <div class="col-xs-3">
-                                      <select name="spec_cat_id2" id="spec_cat_id2" onchange="get_category(this.value,'spec_cat_id3','0');" class="form-control" style="margin-left:-15px;">
-                                        <option value="0">请选择商品分类</option>
-                                      </select>  
-                                      </div>
-                                      <div class="col-xs-3">                        
-                                      <select name="spec_cat_id3" id="spec_cat_id3" class="form-control" style="width:250px;margin-left:-15px;">
-                                        <option value="0">请选择商品分类</option>
-                                      </select> 
-                                      </div>    
-                                      <span id="spec_cat_id" style="color:#F00; display:none;"></span>                                 
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td colspan="2">
-                                    <div id="ajax_specList" class="ajax_bradnlist"></div> 
-                                    </td>
-                                </tr>                            
-                                </tbody>                                
-                                </table>
-                        </div>                           
-                    </div>  
-                    <!--关联规格 end-->                        
+                    <!--商品属性 end-->     
                    
-                    <!--关联品牌-->                
-                    <ul class="nav nav-tabs">
-                        <li class="active"><a href="#tab_tongyong" data-toggle="tab">关联品牌</a></li>
-                    </ul>
-                    <div class="tab-content">                 	  
-                        <div class="tab-pane active" id="tab_tongyong">
-                           
-                            <table class="table table-bordered">
-                                <tbody>                                                                   
-                                <tr>
-                                    <td>分类检索：</td>
-                                    <td>
-                                      <div class="col-xs-3">
-                                      <select name="brand_cat_id1" id="brand_cat_id1" onchange="get_category(this.value,'brand_cat_id2','0');brand_scroll(this);" class="form-control" style="width:250px;margin-left:-15px;">
-                                        <option value="0">请选择商品分类</option>                                      
-                                             <foreach name="cat_list" item="v" key="k" >                                                                                          
-                                               <option value="{$v['id']}">
-                                               		{$v['name']}
-                                               </option>
-                                             </foreach>
-                                      </select>
-                                      </div>
-                                      <div class="col-xs-3">
-                                      <select name="brand_cat_id2" id="brand_cat_id2" onchange="get_category(this.value,'brand_cat_id3','0');" class="form-control margin-left:-15px;">
-                                        <option value="0">请选择商品分类</option>
-                                      </select>  
-                                      </div>
-                                      <div class="col-xs-3">                        
-                                      <select name="brand_cat_id3" id="brand_cat_id3" class="form-control" style="width:250px;margin-left:-15px;">
-                                        <option value="0">请选择商品分类</option>
-                                      </select> 
-                                      </div>    
-                                      <span id="brand_cat_id" style="color:#F00; display:none;"></span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td colspan="2">
-                                    <div id="ajax_brandList" class="ajax_bradnlist"></div>   
-                                    </td>
-                                </tr>                            
-                                </tbody>                                
-                                </table>
-                        </div>                           
-                    </div>  
-                    <!--关联品牌 end-->                        
                    
                     <!--添加属性-->                                    
                     <div class="tab-content">                 	  
@@ -292,10 +202,7 @@ $(document).ready(function(){
 		 // 商品分类第二个下拉菜单
 		 get_category('{$goodsType[cat_id1]}','cat_id2','{$goodsType[cat_id2]}');	
 	</if>
-	<if condition="$goodsType['cat_id3'] gt 0">
-		// 商品分类第二个下拉菜单
-		 get_category('{$goodsType[cat_id2]}','cat_id3','{$goodsType[cat_id3]}');	 
-	</if>   
+
 		
 	getSpecList(0,0); // 默认查询所有规格
 	getBrandList(0,0); // 默认查出所有品牌

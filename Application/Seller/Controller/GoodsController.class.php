@@ -154,13 +154,13 @@ class GoodsController extends BaseController {
                    // form表单提交
                    // C('TOKEN_ON',true);                                                            
                     $Goods->on_time = time(); // 上架时间
-                    $cat_id3 = I('cat_id3',0);
+                    $cat_id2 = I('cat_id2',0);
                     $_POST['extend_cat_id_2'] && ($Goods->extend_cat_id = I('extend_cat_id_2'));
                     $_POST['extend_cat_id_3'] && ($Goods->extend_cat_id = I('extend_cat_id_3'));
                     $Goods->shipping_area_ids = implode(',',$_POST['shipping_area_ids']);
                     $Goods->shipping_area_ids = $Goods->shipping_area_ids ? $Goods->shipping_area_ids : '';
                     
-                    $type_id = M('goods_category')->where("id = $cat_id3")->getField('type_id'); // 找到这个分类对应的type_id
+                    $type_id = M('goods_category')->where("id = $cat_id2")->getField('type_id'); // 找到这个分类对应的type_id
                     $store_goods_examine = M('store')->where(array('store_id'=>STORE_ID))->getField('goods_examine');
                     $Goods->goods_type = $type_id ? $type_id : 0;
                     $Goods->store_id = STORE_ID; // 店家id
@@ -262,10 +262,10 @@ class GoodsController extends BaseController {
      * 动态获取商品属性输入框 根据不同的数据返回不同的输入框类型
      */
     public function ajaxGetAttrInput(){
-        $cat_id3 = I('cat_id3',0);
+        $cat_id2 = I('cat_id2',0);
         $goods_id = I('goods_id',0);
-        empty($cat_id3) && exit('');       
-        $type_id = M('goods_category')->where("id = $cat_id3")->getField('type_id'); // 找到这个分类对应的type_id
+        empty($cat_id2) && exit('');
+        $type_id = M('goods_category')->where("id = $cat_id2")->getField('type_id'); // 找到这个分类对应的type_id
         empty($type_id) && exit('');
         $GoodsLogic = new GoodsLogic();
         $str = $GoodsLogic->getAttrInput($goods_id,$type_id);
