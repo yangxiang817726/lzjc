@@ -136,7 +136,7 @@ class StoreController extends BaseController{
 	public function store_add(){
 		if(IS_POST){
 			$store_name = I('store_name');
-			$user_name = I('user_name');
+			$user_name = I('seller_name');
 			$seller_name = I('seller_name');
 			if(M('store')->where("store_name='$store_name'")->count()>0){
 				$this->error("店铺名称已存在");
@@ -144,16 +144,17 @@ class StoreController extends BaseController{
 			if(M('seller')->where("seller_name='$seller_name'")->count()>0){
 				$this->error("此名称已被占用");
 			}
-			/*$user_id = M('users')->where("email='$user_name' or mobile='$user_name'")->getField('user_id');
-			if($user_id){
-				if(M('store')->where(array('user_id'=>$user_id))->count()>0){
-					$this->error("该会员已经申请开通过店铺");
-				}
-			}*/
+
+            $seller_id = M('seller')->where("seller_name='$user_name'")->getField('seller_id');
+            if($seller_id){
+                if(M('store')->where(array('user_id'=>$user_id))->count()>0){
+                    $this->error("会员名称已经被使用");
+                }
+            }
 			$store = array('store_name'=>$store_name,'user_name'=>$user_name,'store_state'=>1,
-					'seller_name'=>$seller_name,'password'=>I('password'),
-					'store_time'=>time(),'is_own_shop'=>I('is_own_shop')
-			);
+                'seller_name'=>$seller_name,'password'=>I('password'),
+                'store_time'=>time(),'is_own_shop'=>I('is_own_shop')
+            );
 			$storeLogic = new StoreLogic();
 			if($storeLogic->addStore($store)){
 				if(I('is_own_shop') == 1){
@@ -489,6 +490,22 @@ class StoreController extends BaseController{
 	}
 	
 	public function change(){
+	    if($_GET['status']==1){
+	        //如果通过,则注册店铺到店铺表,注册用户到seller表
+           $store_apply= D('seller_apply')->where(array("id"=>$_GET['id']))->find();
+
+            $store_name=$store_apply['sellername'];
+            $seller_name=$store_apply['sellerccontactphone'];
+            $uid=$store_apply['user_id'];
+            $store = array('store_name'=>$store_name,'user_name'=>$user_name,'store_state'=>1,    //这里只是逻辑模拟数据，后期根据具体情况修改字段
+                'seller_name'=>$seller_name,'password'=>'111111',
+                'store_time'=>time(),'is_own_shop'=>0
+            );
+
+            $storeLogic = new StoreLogic();
+            $storeLogic->addStore($store,$uid);
+
+        }
 		D('seller_apply')->where(array("id"=>$_GET['id']))->save($_GET);
 	}
 }

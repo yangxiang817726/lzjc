@@ -35,6 +35,7 @@ class StoreController extends BaseController{
 	
 	public function store_setting(){
 		$store = M('store')->where("store_id=".STORE_ID)->find();
+
 		if($store){
 			$grade = M('store_grade')->where("sg_id=".$store['grade_id'])->find();
 			$store['grade_name'] = $grade['sg_name'];

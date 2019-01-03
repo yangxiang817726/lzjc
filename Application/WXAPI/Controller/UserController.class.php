@@ -864,7 +864,19 @@ class UserController extends BaseController {
             echo json_encode(array("code"=>'400','msg'=>'验证码或者手机号码有误'));
     }
     
-    
+    public function checkisbind(){          //检查是否已经绑定了手机号码
+        $user_id = $_GET['user_id'];
+        $res = M('users')->where(array("user_id"=>$user_id))->field('mobile,store_id')->find();
+
+        if(!empty($res['store_id'])){
+            echo json_encode(array("code"=>'400','msg'=>'已经绑定了店铺'));
+        }
+        if(empty($res['mobile'])){
+            echo json_encode(array("code"=>'100','msg'=>'需要绑定手机号码','res'=>$res));
+        }else{
+            echo json_encode(array("code"=>'200','msg'=>'跳转入驻页面','res'=>$res));
+        }
+    }
     public function register1()
     {
         $phone = $_GET['phone'];
@@ -947,22 +959,20 @@ class UserController extends BaseController {
     	$result = $this->get_url_content($_GET['url']);
     	echo $result;
     }
-    public function get_url_content($url)
+    public function get_url_content($url,$data = null)
     {
-        $user_agent = "Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1; Trident/4.0)";
-        //$data_string = json_encode($data);
-        
-        $ch = curl_init($url);
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-        //curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-            'Content-Type: application/json',
-            //'Content-Length: ' . strlen($data_string)
-        ));
-        
-        $result = curl_exec($ch);
-        curl_close($ch);
-        return $result;
+
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_URL, $url);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, FALSE);
+        if (!empty($data)){
+            curl_setopt($curl, CURLOPT_POST, 1);
+            curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+        }
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        $output = curl_exec($curl);
+        curl_close($curl);
+        return $output;
     }
 }

@@ -56,25 +56,49 @@ class StoreLogic extends Model
      * @param $user
      * @return array
      */
-    public function addStore($store)
+    public function addStore($store,$user_id=null)
     {
     	//添加前台登陆账号
     	$model = new Model();
     	$model->startTrans();
     	$db_prefix = C('DB_PREFIX');
-    	$utype = check_email($store['user_name']) ? 'email' : 'mobile';
-		$user = array($utype=>$store['user_name'],'password'=>encrypt($store['password']),'reg_time'=>time());
-		$user_id = $model->table($db_prefix.'users')->add($user);
+    	$wapuser=$user_id; //证明是通过审核的店铺
+//    	$utype = check_email($store['user_name']) ? 'email' : 'mobile';
+      if(empty($user_id)){
+          $user_id = M('users')->where("mobile='{$store['user_name']}'")->getField('user_id');
+
+          if($user_id){
+              if(M('store')->where(array('user_id'=>$user_id))->count()>0){
+                  $this->error("该会员已经申请开通过店铺");
+              }else{
+
+              }
+          }else{
+
+              $user = array('mobile'=>$store['user_name'],'password'=>encrypt($store['password']),'reg_time'=>time());
+              $user_id = $model->table($db_prefix.'users')->add($user);
+          }
+      }else{
+          if(M('seller')->where(array('user_id'=>$user_id))->count()>0){
+              $this->error("该会员已经绑定过店铺");
+          }
+      }
+
+        $password=$store['password'];
 		$store['user_id'] = $user_id;
 		unset($store['password']);
 		//添加店铺信息
 		$store_id = $model->table($db_prefix.'store')->add($store);
+		if($wapuser){
+            D('Users')->where(array("user_id" => $user_id))->data(array('store_id'=>$store_id,'password'=>encrypt($password)))->save(); //绑定店铺ID给用户,并且修改用户密码
+        }
+
 		$model->table($db_prefix.'store_extend')->add(array('store_id'=>$store_id));
 		if($store['is_own_shop'] == 1){
 			//添加驻外店铺
 			$apply = array('seller_name'=>$store['seller_name'],'user_id'=>$user_id,
-					'store_name'=>$store['store_name'],'company_province'=>0,'sc_bail'=>0,'apply_state'=>1,
-			);
+                'store_name'=>$store['store_name'],'company_province'=>0,'sc_bail'=>0,'apply_state'=>1,
+            );
 			M('store_apply')->add($apply);
 		}
 		//添加店铺管理员

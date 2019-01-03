@@ -33,12 +33,12 @@ class GoodsModel extends Model {
         array('cat_id1','0','一级分类必须选择。',1,'notequal',3),
         array('cat_id2','0','二级分类必须选择。',1,'notequal',3),
         array('cat_id3','0','三级分类必须选择。',1,'notequal',3),
-        array('goods_sn','','商品货号重复！',2,'unique',1),        
-        array('shop_price','/\d{1,10}(\.\d{1,2})?$/','本店售价格式不对。',2,'regex'),        
-        array('member_price','/\d{1,10}(\.\d{1,2})?$/','会员价格式不对。',2,'regex'),        
-        array('market_price','/\d{1,10}(\.\d{1,2})?$/','市场价格式不对。',2,'regex'), // currency
-        array('weight','/\d{1,10}(\.\d{1,2})?$/','重量格式不对。',2,'regex'),
-        array('exchange_integral','checkExchangeIntegral','积分抵扣金额不能超过商品总额',0,'callback'),
+//        array('goods_sn','','商品货号重复！',2,'unique',1),
+      //  array('shop_price','/\d{1,10}(\.\d{1,2})?$/','本店售价格式不对。',2,'regex'),
+       // array('member_price','/\d{1,10}(\.\d{1,2})?$/','会员价格式不对。',2,'regex'),
+        //array('market_price','/\d{1,10}(\.\d{1,2})?$/','市场价格式不对。',2,'regex'), // currency
+       // array('weight','/\d{1,10}(\.\d{1,2})?$/','重量格式不对。',2,'regex'),
+       // array('exchange_integral','checkExchangeIntegral','积分抵扣金额不能超过商品总额',0,'callback'),
      );   
     
     

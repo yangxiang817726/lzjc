@@ -151,7 +151,20 @@ function GetUploadify(num,elementid,path,callback)
 		$("iframe.uploadframe").css("height",$(document).height()).show();
 	});
 }
-
+function Getmap(address,longlat,callback)
+{
+    var upurl ='/index.php?m=Admin&c=map&a=index&address='+address+'&longlat='+longlat+'&func='+callback;
+    var iframe_str='<iframe frameborder="0" ';
+    iframe_str=iframe_str+'id=uploadify ';
+    iframe_str=iframe_str+' src='+upurl;
+    iframe_str=iframe_str+' allowtransparency="true" class="uploadframe" scrolling="no"> ';
+    iframe_str=iframe_str+'</iframe>';
+    $("body").append(iframe_str);
+    $("iframe.uploadframe").css("height",$(document).height()).css("width","100%").css("position","fixed").css("left","0px").css("top","0px").css("z-index","999999").show();
+    $(window).resize(function(){
+        $("iframe.uploadframe").css("height",$(document).height()).show();
+    });
+}
 /*
  * 上传图片 前台专用
  * @access  public

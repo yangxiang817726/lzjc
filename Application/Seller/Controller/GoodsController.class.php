@@ -102,9 +102,9 @@ class GoodsController extends BaseController {
             //重置获取条件
             delIsBack();
         }
-        
+
         $goodsList = $model->where($where)->order($order_str)->limit($Page->firstRow.','.$Page->listRows)->select();
- 
+
         cachePage($Page);
         $show = $Page->show();
         
@@ -114,10 +114,52 @@ class GoodsController extends BaseController {
         $this->assign('goodsList',$goodsList);
         $this->assign('page',$show);// 赋值分页输出
         $this->display();         
-    }    
-    
-    
-   /**
+    }
+     //平台商品列表
+    public function ajaxptGoodsList(){
+
+        $where = "is_own_shop = 1 "; // 搜索条件
+        I('intro')    && $where = "$where and ".I('intro')." = 1" ;
+        (I('store_cat_id1') !== '') && $where = "$where and store_cat_id1 = ".I('store_cat_id1');
+        (I('is_on_sale') !== '') && $where = "$where and is_on_sale = ".I('is_on_sale');
+        (I('cat_id1') >0) && $where = "$where and cat_id1 = ".I('cat_id1');
+        (I('cat_id2') >0) && $where = "$where and cat_id2 = ".I('cat_id2');
+        $goods_state = I('goods_state'); // 商品状态  0待审核 1审核通过 2审核失败  3违规下架
+        $goods_state && $where = "$where and goods_state in ($goods_state) ";
+
+        // 关键词搜索
+        $key_word = I('key_word') ? trim(I('key_word')) : '';
+        if($key_word)
+        {
+            $where = "$where and (goods_name like '%$key_word%' or goods_sn like '%$key_word%')" ;
+        }
+
+        $model = M('Goods');
+        $count = $model->where($where)->count();
+        $Page  = new AjaxPage($count,10);
+
+        $order_str = "`{$_POST['orderby1']}` {$_POST['orderby2']}";
+
+        //是否从缓存中获取Page
+        if(session('is_back')==1){
+            $Page = getPageFromCache();
+            //重置获取条件
+            delIsBack();
+        }
+
+        $goodsList = $model->where($where)->order($order_str)->limit($Page->firstRow.','.$Page->listRows)->select();
+
+        cachePage($Page);
+        $show = $Page->show();
+
+        $catList = D('goods_category')->select();
+        $catList = convert_arr_key($catList, 'id');
+        $this->assign('catList',$catList);
+        $this->assign('goodsList',$goodsList);
+        $this->assign('page',$show);// 赋值分页输出
+        $this->display();
+    }
+    /**
      * 添加修改商品
      */
     public function addEditGoods(){   
@@ -153,7 +195,7 @@ class GoodsController extends BaseController {
                 }else {
                    // form表单提交
                    // C('TOKEN_ON',true);                                                            
-                    $Goods->on_time = time(); // 上架时间
+//                    $Goods->on_time = time(); // 上架时间
                     $cat_id2 = I('cat_id2',0);
                     $_POST['extend_cat_id_2'] && ($Goods->extend_cat_id = I('extend_cat_id_2'));
                     $_POST['extend_cat_id_3'] && ($Goods->extend_cat_id = I('extend_cat_id_3'));
@@ -161,15 +203,16 @@ class GoodsController extends BaseController {
                     $Goods->shipping_area_ids = $Goods->shipping_area_ids ? $Goods->shipping_area_ids : '';
                     
                     $type_id = M('goods_category')->where("id = $cat_id2")->getField('type_id'); // 找到这个分类对应的type_id
-                    $store_goods_examine = M('store')->where(array('store_id'=>STORE_ID))->getField('goods_examine');
+                    $store_goods_examine = M('store')->where(array('store_id'=>STORE_ID))->Field('goods_examine,is_own_shop')->find();
+
                     $Goods->goods_type = $type_id ? $type_id : 0;
                     $Goods->store_id = STORE_ID; // 店家id
-                    if($store_goods_examine){
-                        $Goods->goods_state = 0; // 待审核
-                    }else{
-                        $Goods->goods_state = 1; // 出售中
-                    }
 
+                    if($store_goods_examine['is_own_shop']=='1'){
+                        $Goods->is_own_shop = 1; // 自营商品
+                    }else{
+                        $Goods->is_own_shop = 0; // 门店商品
+                    }
                     if($Goods->distribut > ($Goods->shop_price / 2))
                         $this->ajaxReturn(json_encode(array('status' => -1,'msg'=> '分销的分成金额不得超过商品金额的50%','data'  =>'')));
                     
@@ -182,14 +225,28 @@ class GoodsController extends BaseController {
                                     'goods_price'=>$_POST['shop_price'], // 本店价
                                     'member_goods_price'=>$_POST['shop_price'], // 会员折扣价                        
                                     ));                            
-                    		$Goods->save(); // 编辑数据到数据库
+                    	$res=	$Goods->save(); // 编辑数据到数据库
+                           if($res==1){
+                               if($store_goods_examine['goods_examine']){
+                                  $goods_state = 0; // 待审核
+                               }else{
+                                   $goods_state = 1; // 出售中
+                               }
+                               M('Goods')->where(array('goods_id'=>$goods_id,'store_id'=>STORE_ID))->save(array('goods_state' =>$goods_state,'on_time' => time()));
+                           }
                     	}else{
                     		$this->ajaxReturn(array('status' => -1,'msg'=> '非法操作'),'JSON');
                     	}                                                                                             
                     }
                     else
                     {                           
-                        $goods_id = $Goods->add(); // 新增数据到数据库                        
+                        $goods_id = $Goods->add(); // 新增数据到数据库
+                        if($store_goods_examine['goods_examine']){
+                            $goods_state = 0; // 待审核
+                        }else{
+                            $goods_state = 1; // 出售中
+                        }
+                        M('Goods')->where(array('goods_id'=>$goods_id,'store_id'=>STORE_ID))->save(array('goods_state' =>$goods_state,'on_time' => time()));
                     }                                        
                  
                     $Goods->afterSave($goods_id,STORE_ID);                                        
@@ -236,8 +293,115 @@ class GoodsController extends BaseController {
             $this->assign('goodsImages',$goodsImages);  // 商品相册
             $this->initEditor(); // 编辑器
             $this->display('_goods');                                     
-    } 
-      
+    }
+    /**
+     * 添加平台商品到自己库里面商品
+     */
+    public function pubptGoods(){
+
+        $GoodsLogic = new GoodsLogic();
+        $Goods = D('Admin/Goods'); //
+
+        $type = 1; // 标识自动验证时的 场景 1 表示插入
+        //
+
+
+        //
+        //ajax提交验证
+        if(($_GET['is_ajax'] == 1) && IS_POST)
+        {
+             unset($_POST['goods_id']);
+            C('TOKEN_ON',false);
+            if(!$Goods->create(NULL,$type))// 根据表单提交的POST数据创建数据对象
+            {
+                //  编辑
+                $error = $Goods->getError();
+                $error_msg = array_values($error);
+                $return_arr = array(
+                    'status' => -1,
+                    'msg' => $error_msg[0],
+                    'data' => $error,
+                );
+                $this->ajaxReturn(json_encode($return_arr));
+            }else {
+                // form表单提交
+                // C('TOKEN_ON',true);
+//                    $Goods->on_time = time(); // 上架时间
+                $cat_id2 = I('cat_id2',0);
+                $_POST['extend_cat_id_2'] && ($Goods->extend_cat_id = I('extend_cat_id_2'));
+                $_POST['extend_cat_id_3'] && ($Goods->extend_cat_id = I('extend_cat_id_3'));
+                $Goods->shipping_area_ids = implode(',',$_POST['shipping_area_ids']);
+                $Goods->shipping_area_ids = $Goods->shipping_area_ids ? $Goods->shipping_area_ids : '';
+
+                $type_id = M('goods_category')->where("id = $cat_id2")->getField('type_id'); // 找到这个分类对应的type_id
+                $store_goods_examine = M('store')->where(array('store_id'=>STORE_ID))->Field('goods_examine,is_own_shop')->find();
+
+                $Goods->goods_type = $type_id ? $type_id : 0;
+                $Goods->store_id = STORE_ID; // 店家id
+
+                if($store_goods_examine['is_own_shop']=='1'){
+                    $Goods->is_own_shop = 1; // 自营商品
+                }else{
+                    $Goods->is_own_shop = 0; // 门店商品
+                }
+
+//                if($Goods->distribut > ($Goods->shop_price / 2))
+//                    $this->ajaxReturn(json_encode(array('status' => -1,'msg'=> '分销的分成金额不得超过商品金额的50%','data'  =>'')));
+                   $goods_id = $Goods->add(); // 新增数据到数据库
+
+                    if($store_goods_examine['goods_examine']){
+                        $goods_state = 0; // 待审核
+                    }else{
+                        $goods_state = 1; // 出售中
+                    }
+                    M('Goods')->where(array('goods_id'=>$goods_id,'store_id'=>STORE_ID))->save(array('goods_state' =>$goods_state,'on_time' => time()));
+
+
+                $Goods->afterSave($goods_id,STORE_ID);
+                $GoodsLogic->saveGoodsAttr($goods_id,$type_id,STORE_ID); // 处理商品 属性
+
+                $return_arr = array(
+                    'status' => 1,
+                    'msg'   => '操作成功',
+                    'data'  => array('url'=>U('Goods/goodsList')),
+                );
+                //重定向, 调整之前URL是设置参数获取方式
+                session("is_back" , 1);
+                $this->ajaxReturn(json_encode($return_arr));
+
+            }
+        }else{
+
+        }
+
+        $goodsInfo =M('Goods')->where('goods_id='.I('GET.goods_id',0))->find();
+        $store = M('store')->where(array('store_id'=>STORE_ID))->find();
+        if($store['bind_all_gc'] == 1){
+            $cat_list = M('goods_category')->where("parent_id = 0")->select();//自营店已绑定所有分类
+        }else{
+            $cat_list = M('goods_category')->where("parent_id = 0 and id in(select class_1 from ".C('DB_PREFIX')."store_bind_class  where store_id = ".STORE_ID." and state = 1 )")->select();//自营店已绑定所有分类
+        }
+        $store_goods_class_list = M('store_goods_class')->where("parent_id = 0 and store_id = ".STORE_ID)->select(); //店铺内部分类
+        $brandList = $GoodsLogic->getSortBrands();
+        $goodsType = M("GoodsType")->select();
+        $suppliersList = M("suppliers")->select();
+        $plugin_shipping = M('plugin')->where(array('type'=>array('eq','shipping')))->select();//插件物流
+        $shipping_area = D('shipping_area')->getShippingArea(STORE_ID);//配送区域
+        $goods_shipping_area_ids = explode(',',$goodsInfo['shipping_area_ids']);
+        $this->assign('goods_shipping_area_ids',$goods_shipping_area_ids);
+        $this->assign('shipping_area',$shipping_area);
+        $this->assign('plugin_shipping',$plugin_shipping);
+        $this->assign('cat_list',$cat_list);
+        $this->assign('store_goods_class_list',$store_goods_class_list);
+        $this->assign('brandList',$brandList);
+        $this->assign('goodsType',$goodsType);
+        $this->assign('suppliersList',$suppliersList);
+        $this->assign('goodsInfo',$goodsInfo);  // 商品详情
+        $goodsImages = M("GoodsImages")->where('goods_id ='.I('GET.goods_id',0))->select();
+        $this->assign('goodsImages',$goodsImages);  // 商品相册
+        $this->initEditor(); // 编辑器
+        $this->display('_pubptgoods');
+    }
     /**
      * 更改指定表的指定字段
      */
@@ -414,8 +578,42 @@ class GoodsController extends BaseController {
         $this->assign('items_ids',$items_ids);
         $this->assign('specList',$specList);
         $this->display('ajax_spec_select');        
-    }    
-    
+    }
+    public function ajaxGetSpecSelectpt(){
+
+        $goods_id = I('goods_id',0);
+        $cat_id2 = I('cat_id2',0);
+        $store_id=M('Goods')->where(" goods_id ='".$goods_id."'")->getField('store_id');
+
+        empty($cat_id2) && exit('');
+        $goods_id = $goods_id ? $goods_id : 0;
+
+        $specList = M('spec')->where(" cat_id2 =(".$cat_id2.")")->getField('id,name,cat_id1,cat_id2');
+        if(empty($specList)){
+            $this->display('nobindspec');die;
+        }
+
+
+
+
+        foreach($specList as $k => $v)
+            $specList[$k]['spec_item'] = D('SpecItem')->where("store_id = ".$store_id." and spec_id = ".$v['id'])->getField('id,item'); // 获取规格项
+
+        $items_id = M('SpecGoodsPrice')->where("goods_id = $goods_id")->getField("GROUP_CONCAT(`key` SEPARATOR '_') AS items_id");
+        $items_ids = explode('_', $items_id);
+
+        // 获取商品规格图片
+        if($goods_id)
+        {
+            $specImageList = M('SpecImage')->where("goods_id = $goods_id")->getField('spec_image_id,src');
+        }
+        $this->assign('specImageList',$specImageList);
+
+        $this->assign('items_ids',$items_ids);
+        $this->assign('specList',$specList);
+        $this->display('ajax_spec_select');
+    }
+
     /**
      * 动态获取商品规格输入框 根据不同的数据返回不同的输入框
      */    
@@ -423,10 +621,18 @@ class GoodsController extends BaseController {
          $GoodsLogic = new GoodsLogic();
          $goods_id = I('get.goods_id',0);
          $spec_arr = I('spec_arr');
+
          $str = $GoodsLogic->getSpecInput($goods_id ,$spec_arr,STORE_ID);
          exit($str);   
     }
-    
+    public function ajaxGetSpecInputpt(){
+        $GoodsLogic = new GoodsLogic();
+        $goods_id = I('get.goods_id',0);
+        $spec_arr = I('spec_arr');
+        $store_id=M('Goods')->where(" goods_id ='".$goods_id."'")->getField('store_id');
+        $str = $GoodsLogic->getSpecInput($goods_id ,$spec_arr, $store_id);
+        exit($str);
+    }
     /**
      * 商家发布商品时添加的规格
      */
@@ -663,5 +869,16 @@ class GoodsController extends BaseController {
                 M('goods_images')->where(array('img_id'=>$goods_images[$key]['img_id']))->delete();
             }
         }
+    }
+    public function ptgoodsList(){
+        checkIsBack();
+        $store = M('store')->where(array('store_id'=>STORE_ID))->field('bind_all_gc')->find();
+        if($store['bind_all_gc'] == 1){
+            $cat_list = M('goods_category')->where("parent_id = 0")->select();//自营店已绑定所有分类
+        }else{
+            $cat_list = M('goods_category')->where("parent_id = 0 and id in(select class_1 from ".C('DB_PREFIX')."store_bind_class  where store_id = ".STORE_ID." and state = 1 )")->select();//自营店已绑定所有分类
+        }
+        $this->assign('cat_list',$cat_list);
+        $this->display();
     }
 }

@@ -1,0 +1,115 @@
+    <!-- /.fn-comment-list -->
+    <div class="fn-page-css-1" style="display: block;">
+      <div class="fn-page-css-1 pagintion fix" style="display: block;">
+      	<!--
+        <ul>
+          <li class="pg-prev pg-off"><a href="javascript:void(0)"><i></i>上一页</a></li>
+          <li class="pg-on pg-index" data-page-index="1"><a href="javascript:void(0)" class="on">1</a></li>
+          <li pg-index="" data-page-index="2"><a href="javascript:void(0)">2</a></li>
+          <li pg-index="" data-page-index="3"><a href="javascript:void(0)">3</a></li>
+          <li pg-index="" data-page-index="4"><a href="javascript:void(0)">4</a></li>
+          <li pg-index="" data-page-index="5"><a href="javascript:void(0)">5</a></li>
+          <li pg-index="" data-page-index="6"><a href="javascript:void(0)">6</a></li>
+          <li class="pg-next" data-page-index="2"><a href="javascript:void(0)">下一页</a></li>
+          <li class="pg-num-top">到第</li>
+          <li class="pg-num">
+            <input type="text" class="jump_index">
+          </li>
+          <li class="pg-num-bot">页</li>
+          <li class="pg-btn"><a href="javascript:void(0);" class="btn_jump">确定</a></li>
+        </ul>-->
+              </div>
+    </div>
+<script>
+    // 点击分页触发的事件
+    $("#ajax_comment_return .pagination  a").click(function(){
+        cur_page = $(this).data('p');
+        ajaxComment(commentType,cur_page);
+    });
+    /**
+     * 点赞ajax
+     * dyr
+     * @param obj
+     */
+    function zan(obj) {
+        var comment_id = $(obj).attr('data-comment-id');
+        var zan_num = parseInt($("#span_zan_" + comment_id).text());
+        $.ajax({
+            type: "POST",
+            data: {comment_id: comment_id},
+            dataType: 'json',
+            url: "/index.php?m=Home&c=user&a=ajaxZan",//
+            success: function (res) {
+                if (res.success) {
+                    $("#span_zan_" + comment_id).text(zan_num + 1);
+                } else {
+                    alert('只能点赞一次哟~');
+                }
+            },
+            error : function(res) {
+                if( res.status == "200"){ // 兼容调试时301/302重定向导致触发error的问题
+                    alert("请先登录!");
+                    return;
+                }
+                alert("请求失败!");
+                return;
+            }
+        });
+    }
+
+    reply_text = null;
+    //回复
+    $(document).ready(function() {
+      $('.fn-comment-ignite .fn-answer').click(function() {
+          $(this).parents('.bk-mc').siblings('.reply-textarea').toggleClass('hide');
+      });  
+      $(document).on('click','.comment-operate .reply', function() {
+        $(this).siblings('.reply-textarea').toggle();
+      });
+      $(document).on('click','.operate-box .reply-submit',function() {
+        var content = $(this).parents('.inner').find('.reply-input').val();
+        var comment_id = $(this).parents('.inner').find('.reply-input').attr('data-id').substr(10);
+        var comment_name = $(this).parents('.comment-operate').siblings('.reply-infor').find('.main .user-name').text();
+        var reply_id = $(this).attr('data-id');
+        submit_reply(comment_id,content,comment_name,reply_id);
+//        $(this).parents('.comment-replylist').append('<div class="comment-reply-item hide" data-vender="0" data-name="中国管理" data-uid="" style="display: block;"> <div class="reply-infor clearfix"> <div class="main"> <span class="user-name">中国管理</span> ：<span class="words"> 此处添加内容 </span> </div> <div class="side"> <span class="date">2016.08.08</span> </div> </div> <div class="comment-operate"> <a class="reply J-reply-trigger" href="#none" target="_self">回复</a> <div class="reply-textarea J-reply-con hide"> <div class="reply-arrow"><b class="layer1"></b><b class="layer2"></b></div> <div class="inner"> <textarea class="reply-input J-reply-input" placeholder="回复中国管理：" maxlength="120"></textarea> <div class="operate-box"> <span class="txt-countdown">还可以输入<em>120</em>字</span> <a class="reply-submit J-submit-reply" href="#none" target="_self">提交</a> </div> </div> </div> </div> </div>')
+        $(this).parents('.reply-textarea').toggleClass('hide');
+      });
+    });
+    //字数限制
+    $(document).on('keyup', '.reply-input', function() {
+      var curLength=$(this).val().length; 
+      if(curLength>120) { 
+        var num=$(this).val().substr(0,120); 
+        $(this).val(num); 
+        alert("超过字数限制！" ); 
+      } else { 
+        $(this).siblings('.operate-box').find('.txt-countdown em').text(120-$(this).val().length); 
+      } 
+    });
+
+    function submit_reply(comment_id,content,to_name,reply_id)
+    {
+        $.ajax({
+            type: 'post',
+            dataType: 'json',
+            data: {comment_id: comment_id,content:content,to_name:to_name,reply_id:reply_id,goods_id:'169'},
+            url: "/index.php/Home/User/reply_add.html",
+            success: function (res) {
+                if (res.success) {
+                    // layer.msg('回复已提交', {icon: 1});
+                    alert('回复已提交');
+                } else {
+                    alert(res.msg);
+                }
+            },
+            error : function(res) {
+                if( res.status == "200"){ // 兼容调试时301/302重定向导致触发error的问题
+                    alert("请先登录!");
+                    return;
+                }
+                alert("请求失败!");
+            }
+        });
+    }
+</script>

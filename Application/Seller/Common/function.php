@@ -122,6 +122,7 @@ function getMenuList() {
 					//array('name' => '淘宝导入', 'act'=>'import', 'op'=>'index'),             //临时屏蔽淘宝商品导入
 					array('name' => '出售中的商品', 'act'=>'goodsList?goods_state=1', 'op'=>'Goods'),
 					array('name' => '仓库中的商品', 'act'=>'goodsList?goods_state=0,2,3', 'op'=>'Goods'),
+                    array('name' => '平台商品导入', 'act'=>'ptgoodsList', 'op'=>'Goods'),
 					//array('name' => '关联版式', 'act'=>'store_plate', 'op'=>'index'),
 					array('name' => '商品规格', 'act' => 'specList', 'op' => 'Goods'),
                     //array('name' => '品牌申请', 'act'=>'brandList', 'op'=>'Goods'),                            

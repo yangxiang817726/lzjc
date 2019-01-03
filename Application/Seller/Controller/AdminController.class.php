@@ -135,8 +135,10 @@ class AdminController extends BaseController {
             $password = I('post.password');
             if(!empty($seller_name) && !empty($password)){
 				$seller = M('seller')->where(array('seller_name'=>$seller_name))->find();
+
 				if($seller){
 					$user = M('users')->where("user_id=".$seller['user_id']." and password='".encrypt($password)."'")->find();
+
 					if($user){
 						if($seller['is_admin'] == 0 && $seller['enabled'] == 1){
 							exit(json_encode(array('status'=>0,'msg'=>'该账户还没启用激活')));

@@ -73,8 +73,8 @@
                     <?php if($list[goods_state] == 3): ?>违规下架<?php endif; ?>
                     </td>
                     <td class="text-right">
-                      <!--    <a href="<?php echo U('Home/Goods/goodsInfo',array('id'=>$list['goods_id']));?>">查看</a>&nbsp;
-                   --> </td>   
+                          <a href="<?php echo U('Home/Goods/goodsInfo',array('id'=>$list['goods_id']));?>">查看</a>&nbsp;
+                    </td>
                 </tr><?php endforeach; endif; else: echo "" ;endif; ?>
             </tbody>
         </table>

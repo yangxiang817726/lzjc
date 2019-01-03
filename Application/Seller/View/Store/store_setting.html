@@ -102,8 +102,12 @@
                                         </select>
                                         </div> 
                                         <div class="col-xs-3">
-                                        	<input type="text" placeholder="详细地址" class="form-control" name="store_address" value="{$store.store_address}">
-                                        </div>      
+                                        	<input type="text" placeholder="详细地址" class="form-control" name="store_address" value="{$store.store_address}" id="address" onclick="dingwei()">
+                                        </div>
+                                        <div class="col-xs-3">
+                                            <input type="text" placeholder="经纬度" class="form-control" name="addressLonglat" value="{$store.addresslonglat}" id="addressLonglat" onclick="dingwei()">
+                                        </div>
+                                        <div> <a href="javascript:void(0);" onclick="dingwei()">定位</a></div>
                                 	</td>
                                 </tr>
                                 <tr>
@@ -142,6 +146,15 @@
 </div>
 
 <script>
+    function dingwei(){
+        var province=$("#province option:selected").text(); //获取选中的项
+        var city=$("#city option:selected").text(); //获取选中的项
+        var district=$("#district option:selected").text(); //获取选中的项
+        var addressLonglat=$('#addressLonglat').val();
+
+        var str=province+city+district;
+        Getmap(str,addressLonglat,'call_back2');
+   }
 function adsubmit(){
 	$('#handlepost').submit();
 }

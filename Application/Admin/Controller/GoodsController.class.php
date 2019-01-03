@@ -260,7 +260,7 @@ class GoodsController extends BaseController {
                     //$_POST['cat_id_3'] && ($Goods->cat_id = $_POST['cat_id_3']);
 
                     $_POST['extend_cat_id_2'] && ($Goods->extend_cat_id = $_POST['extend_cat_id_2']);
-                    $_POST['extend_cat_id_3'] && ($Goods->extend_cat_id = $_POST['extend_cat_id_3']);                                        
+                    $_POST['extend_cat_id_3'] && ($Goods->extend_cat_id = $_POST['extend_cat_id_3']);
                     
                     if ($type == 2)
                     {

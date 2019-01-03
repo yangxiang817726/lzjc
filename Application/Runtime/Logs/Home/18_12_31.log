@@ -1,0 +1,18 @@
+[ 2018-12-31T18:00:34+08:00 ] ::1 /index.php?m=Home&c=api&a=get_category&parent_id=1
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000000s ]
+INFO: [ app_init ] --END-- [ RunTime:0.001000s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.001000s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.001000s ]
+NOTIC: [8] Undefined variable: html D:\phpStudy1\WWW\lzjc\Application\Home\Controller\ApiController.class.php 第 66 行.
+
+[ 2018-12-31T18:00:35+08:00 ] ::1 /index.php?m=Home&c=api&a=get_category&parent_id=12
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000000s ]
+INFO: [ app_init ] --END-- [ RunTime:0.001000s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.001000s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.001000s ]
+NOTIC: [8] Undefined variable: html D:\phpStudy1\WWW\lzjc\Application\Home\Controller\ApiController.class.php 第 66 行.
+

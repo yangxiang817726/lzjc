@@ -287,26 +287,27 @@ class UeditorController extends BaseController
         }
         if(!isset($info['upfile'])){
         	$info['upfile'] = $info['Filedata'];
-        }else{
-        	//编辑器插入图片水印处理
-        	if($this->savePath=='Goods/'){
-        		$image = new \Think\Image();
-        		$water = tpCache('water');
-        		$imgresource = ".".$info['upfile']['urlpath'];
-        		$image->open($imgresource);
-        		if($water['is_mark']==1 && $image->width()>$water['mark_width'] && $image->height()>$water['mark_height']){
-        			if($water['mark_type'] == 'text'){
-        				$image->text($water['mark_txt'],'./hgzb.ttf',20,'#000000',9)->save($imgresource);
-        			}else{
-        				$image->water(".".$water['mark_img'],9,$water['mark_degree'])->save($imgresource);
-        			}
-        		}
-        	}
-        }
+       }
+//       else{
+//        	//编辑器插入图片水印处理
+//        	if($this->savePath=='Goods/'){
+//        		$image = new \Think\Image();
+//        		$water = tpCache('water');
+//        		$imgresource = ".".$info['upfile']['urlpath'];
+//        		$image->open($imgresource);
+//        		if($water['is_mark']==1 && $image->width()>$water['mark_width'] && $image->height()>$water['mark_height']){
+//        			if($water['mark_type'] == 'text'){
+//        				$image->text($water['mark_txt'],'./hgzb.ttf',20,'#000000',9)->save($imgresource);
+//        			}else{
+//        				$image->water(".".$water['mark_img'],9,$water['mark_degree'])->save($imgresource);
+//        			}
+//        		}
+//        	}
+//        }
         
-        $return_data['url'] = $info['upfile']['urlpath'];
+        $return_data['url'] = $info['file']['urlpath'];
         $return_data['title'] = $title;
-        $return_data['original'] = $info['upfile']['name'];
+        $return_data['original'] = $info['file']['name'];
         $return_data['state'] = $state;
         $this->ajaxReturn($return_data,'json');
     }

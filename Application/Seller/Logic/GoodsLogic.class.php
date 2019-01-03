@@ -281,7 +281,7 @@ class GoodsLogic extends RelationModel
             }                       
 
     }
-    
+
     /**
      * 获取 tp_spec_item表 指定规格id的 规格项
      * @param int $spec_id 规格id
@@ -320,15 +320,16 @@ class GoodsLogic extends RelationModel
         {
             $spec_arr2[$key] = $spec_arr[$key];
         }
-     
+
         
          $clo_name = array_keys($spec_arr2);         
          $spec_arr2 = combineDika($spec_arr2); //  获取 规格的 笛卡尔积                 
                        
          $spec = M('Spec')->getField('id,name'); // 规格表
-         $specItem = M('SpecItem')->where("store_id = $store_id")->getField('id,item,spec_id');//规格项
+         $specItem = M('SpecItem')->getField('id,item,spec_id');//规格项
+
          $keySpecGoodsPrice = M('SpecGoodsPrice')->where("store_id = $store_id and goods_id = $goods_id")->getField('key,key_name,price,store_count,sku');//规格项
-                          
+
        $str = "<table class='table table-bordered' id='spec_input_tab'>";
        $str .="<tr>";       
        // 显示第一行的数据
