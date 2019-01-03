@@ -1,1 +1,0 @@
-a:6:{s:10:"sms_appkey";s:16:"LTAIWPvsJMVfnxyj";s:13:"sms_secretKey";s:30:"i2rq0vo3cjGz07FeVTZi2FzFNruiNn";s:11:"sms_product";s:4:"1111";s:16:"sms_templateCode";s:12:"SMS_73720019";s:16:"regis_sms_enable";s:1:"1";s:12:"sms_time_out";s:2:"60";}

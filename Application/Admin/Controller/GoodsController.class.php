@@ -496,7 +496,7 @@ class GoodsController extends BaseController {
                 'goods_category' => 'id',
                 'brand' => 'id',            
                 'goods_attribute' => 'attr_id',
-        		'ad' =>'ad_id',            
+        		'ad' =>'unit_id',            
         );        
         $model = D($_POST['table']);
         $model->$primary[$_POST['table']] = $_POST['id'];
@@ -907,5 +907,59 @@ class GoodsController extends BaseController {
         }
         $return_fail = array('status' => -1, 'msg' => '没有找到该批量操作', 'data' => '');
         $this->ajaxReturn($return_fail);
+    }
+    public function unitList(){
+        delFile(RUNTIME_PATH.'Html'); // 先清除缓存, 否则不好预览
+
+        $Unit =  M('goods_unit');
+        $where = "1=1";
+
+        $count = $Unit->where($where)->count();// 查询满足要求的总记录数
+        $Page = new \Think\Page($count,20);// 实例化分页类 传入总记录数和每页显示的记录数
+        $res = $Unit->where($where)->order('orderby desc')->limit($Page->firstRow.','.$Page->listRows)->select();
+        $show = $Page->show();// 分页显示输出
+        $this->assign('list',$res);// 赋值数据集
+        $this->assign('page',$show);// 赋值分页输出
+        $this->display();
+    }
+    public function unithandle(){
+
+        $data = I('post.');
+
+
+        if($data['act'] == 'add'){
+            $r = D('goods_unit')->add($data);
+        }
+        if($data['act'] == 'edit'){
+            $r = D('goods_unit')->where('unit_id='.$data['unit_id'])->save($data);
+        }
+
+        if($data['act'] == 'del'){
+            $r = D('goods_unit')->where('unit_id='.$data['del_id'])->delete();
+            if($r) exit(json_encode(1));
+        }
+        $referurl = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : U('Admin/Goods/unitList');
+
+        delFile(RUNTIME_PATH.'Html');
+
+        if($r){
+            $this->success("操作成功",U('Admin/Goods/unitList'));
+        }else{
+            $this->error("操作失败",$referurl);
+        }
+    }
+    public function addunit(){
+        $act = I('GET.act','add');
+        $unit_id = I('GET.unit_id');
+        $unit_info = array();
+        if($unit_id){
+            $unit_info = D('goods_unit')->where('unit_id='.$unit_id)->find();
+
+        }
+
+        $this->assign('info',$unit_info);
+        $this->assign('act',$act);
+     
+        $this->display();
     }
 }

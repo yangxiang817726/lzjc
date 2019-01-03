@@ -98,7 +98,7 @@ class GoodsModel extends Model {
          {
              $spec = M('Spec')->getField('id,name'); // 规格表
              $specItem = M('SpecItem')->where("store_id = $store_id")->getField('id,item');//规格项
-                          
+
              foreach($item as $k => $v)
              {
                    // 批量添加数据
@@ -129,7 +129,105 @@ class GoodsModel extends Model {
          }
          refresh_stock($goods_id); // 刷新商品库存
     }
+    public function afterSavept($goods_id,$store_id)
+    {
+        // 商品货号
+        $goods_sn = "TP".str_pad($goods_id,7,"0",STR_PAD_LEFT);
+        $this->where("goods_id = $goods_id and goods_sn = ''")->save(array("goods_sn"=>$goods_sn)); // 根据条件更新记录
+        $goods_images = I('goods_images');
+        $original_img = I('original_img');
 
+        // 商品图片相册  图册
+        if(count($goods_images) > 1)
+        {
+            array_pop($goods_images); // 弹出最后一个
+            $goodsImagesArr = M('GoodsImages')->where("goods_id = $goods_id")->getField('img_id,image_url'); // 查出所有已经存在的图片
+
+            // 删除图片
+            foreach($goodsImagesArr as $key => $val)
+            {
+                if(!in_array($val, $goods_images))
+                    M('GoodsImages')->where("img_id = {$key}")->delete(); //
+            }
+            // 添加图片
+            foreach($goods_images as $key => $val)
+            {
+                if($val == null)  continue;
+                if(!in_array($val, $goodsImagesArr))
+                {
+                    $data = array(
+                        'goods_id' => $goods_id,
+                        'image_url' => $val,
+                    );
+                    M("GoodsImages")->data($data)->add();; // 实例化User对象
+                }
+            }
+        }
+        // 查看主图是否已经存在相册中
+        $c = M('GoodsImages')->where("goods_id = $goods_id and image_url = '{$original_img}'")->count();
+        if($c == 0 && $original_img)
+        {
+            M("GoodsImages")->add(array('goods_id'=>$goods_id,'image_url'=>$original_img));
+        }
+        delFile("./Public/upload/goods/thumb/$goods_id"); // 删除缩略图
+        // 商品规格价钱处理
+        $item = I('item');
+        $specGoodsPrice = M("SpecGoodsPrice"); // 实例化 商品规格 价格对象
+        $specGoodsPrice->where('goods_id = '.$goods_id)->delete(); // 删除原有的价格规格对象
+
+        if($item)
+        {
+            $spec = M('Spec')->getField('id,name'); // 规格表
+            $specItem = M('SpecItem')->where("store_id = $store_id")->getField('id,item');//规格项
+
+            foreach($item as $k => $v)
+            {
+                // 批量添加数据
+                $arr=explode('_',$k);
+                foreach($arr as $k1=>$v1){
+                    $id='';
+                    $map=array();
+                    $spec=M('spec_item')->where("id='{$v1}'")->find();
+                    $map['store_id']=STORE_ID;
+                    $map['from_spec_id']=$v1;
+                    $id=M('spec_item')->where($map)->getField('id');
+
+                    $map['spec_id']=$spec['spec_id'];
+                    $map['item']=$spec['item'];
+
+                    if(empty($id)){
+                        $id= M('spec_item')->add($map); //
+                    }
+                    $str=$str.$id."_";
+                }
+                $k=rtrim($str,'_');
+                $v['price'] = trim($v['price']);
+                $store_count = $v['store_count'] = trim($v['store_count']); // 记录商品总库存
+                $v['sku'] = trim($v['sku']);
+                $dataList[] = array('goods_id'=>$goods_id,'key'=>$k,'key_name'=>$v['key_name'],'price'=>$v['price'],'store_count'=>$v['store_count'],'sku'=>$v['sku'],'store_id'=>$store_id);
+                // 修改商品后购物车的商品价格也修改一下
+                M('cart')->where("goods_id = $goods_id and spec_key = '$k'")->save(array(
+                    'market_price'=>$v['price'], //市场价
+                    'goods_price'=>$v['price'], // 本店价
+                    'member_goods_price'=>$v['price'], // 会员折扣价
+                ));
+            }
+            $specGoodsPrice->addAll($dataList);
+            //M('Goods')->where("goods_id = 1")->save(array('store_count'=>10)); // 修改总库存为各种规格的库存相加
+        }
+
+        // 商品规格图片处理
+        $item_img = I('item_img');
+        if($item_img)
+        {
+            M('SpecImage')->where("goods_id = $goods_id")->delete(); // 把原来是删除再重新插入
+            foreach ($item_img as $key => $val)
+            {
+                M('SpecImage')->data(array('goods_id'=>$goods_id ,'spec_image_id'=>$key,'src'=>$val,'store_id'=>$store_id))->add();
+            }
+        }
+        refresh_stock($goods_id); // 刷新商品库存
+    }
     /**
      * 检查积分兑换
      * @author dyr

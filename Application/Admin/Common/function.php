@@ -154,6 +154,7 @@ function getAllMenu(){
 					array('name' => '商品列表', 'act'=>'goodsList', 'control'=>'Goods'),
 					array('name' => '商品属性', 'act'=>'goodsTypeList', 'control'=>'Goods'),
 					array('name' => '商品规格', 'act' =>'specList', 'control' => 'Goods'),
+                    array('name' => '单位管理', 'act' =>'unitList', 'control' => 'Goods'),
 					
 			)),
 			'order' => array('name' => '订单管理', 'icon'=>'fa-money', 'sub_menu' => array(

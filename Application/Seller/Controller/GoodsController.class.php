@@ -357,7 +357,7 @@ class GoodsController extends BaseController {
                     M('Goods')->where(array('goods_id'=>$goods_id,'store_id'=>STORE_ID))->save(array('goods_state' =>$goods_state,'on_time' => time()));
 
 
-                $Goods->afterSave($goods_id,STORE_ID);
+                $Goods->afterSavept($goods_id,STORE_ID);
                 $GoodsLogic->saveGoodsAttr($goods_id,$type_id,STORE_ID); // 处理商品 属性
 
                 $return_arr = array(
@@ -597,7 +597,7 @@ class GoodsController extends BaseController {
 
 
         foreach($specList as $k => $v)
-            $specList[$k]['spec_item'] = D('SpecItem')->where("store_id = ".$store_id." and spec_id = ".$v['id'])->getField('id,item'); // 获取规格项
+            $specList[$k]['spec_item'] = D('SpecItem')->where("store_id in(".$store_id.','.STORE_ID.") and spec_id = ".$v['id'])->getField('id,item'); // 获取规格项
 
         $items_id = M('SpecGoodsPrice')->where("goods_id = $goods_id")->getField("GROUP_CONCAT(`key` SEPARATOR '_') AS items_id");
         $items_ids = explode('_', $items_id);
