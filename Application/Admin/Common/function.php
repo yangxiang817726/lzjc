@@ -223,6 +223,18 @@ function getAllMenu(){
 					array('name' => '销售明细', 'act'=>'saleList', 'control'=>'Report'),
 					array('name' => '会员统计', 'act'=>'user', 'control'=>'Report'),
 					array('name' => '运营概览', 'act'=>'finance', 'control'=>'Report'),
+			)),
+			 'factory' => array('name' => '厂家管理', 'icon'=>'fa-tasks', 'sub_menu' => array(
+					array('name' => '账号列表', 'act'=>'index', 'control'=>'Factory'),
+					array('name' => '厂家订单', 'act'=>'order', 'control'=>'Factory'),
+			)),	 
+			 'users' => array('name' => '人员管理', 'icon'=>'fa-tasks', 'sub_menu' => array(
+					array('name' => '区域人员管理', 'act'=>'qylist', 'control'=>'Users'),
+					array('name' => '门店人员管理', 'act'=>'mdlist', 'control'=>'Users'),
+					array('name' => '加工户人员管理', 'act'=>'jglist', 'control'=>'Users'),
+					array('name' => '司机人员管理', 'act'=>'sjlist', 'control'=>'Users'),
+					array('name' => '厂家人员管理', 'act'=>'cjlist', 'control'=>'Users'),
+
 			))
 	);
 }

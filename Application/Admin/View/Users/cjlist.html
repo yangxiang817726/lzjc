@@ -1,0 +1,96 @@
+<include file="Public/min-header" />
+<div class="wrapper">
+	<include file="Public/breadcrumb"/>
+	<section class="content">
+       <div class="row">
+       		<div class="col-xs-12">
+	       		<div class="box">
+	             <div class="box-header">
+	           	   <nav class="navbar navbar-default">	     
+				      <div class="collapse navbar-collapse">
+	    				<div class="navbar-form form-inline">
+				            <div class="form-group">
+				            	<p class="text-success margin blod">厂家人员列表:</p>
+				            </div>
+				             <div class="form-group">
+                                 <a class="btn btn-info" href="{:U('Users/cjlist')}">厂家人员列表列表</a>&nbsp;&nbsp;&nbsp;&nbsp;                                            
+                                 
+				            </div>			          
+				            <div class="form-group pull-right">
+					            <a href="{:U('Users/cjlist_add')}" class="btn btn-primary pull-right"><i class="fa fa-plus"></i> 新增厂家人员列表</a>
+				            </div>	
+				          </div>
+				       </div>
+	    		 	</nav>	
+	               	<nav class="navbar navbar-default">	     
+				        <div class="collapse navbar-collapse">
+				          <form class="navbar-form form-inline" action="{:U('Users/cjlist')}" method="post">
+
+				           <div class="form-group">
+				              	<input type="text" name="name" class="form-control" placeholder="姓名" value="{$name}">
+				            </div>
+				            <div class="form-group">
+				            	<label class="control-label" for="input-order-id">厂家人员列表申请状态</label>
+				            	 <select name="status" class="form-control">
+				            	 	   <option>选择状态</option>
+				            	 	   <option value="2">未审核</option>
+									   <option value="1">已审核</option>
+                                 </select>   
+				            </div>
+
+				            <div class="form-group">
+				              	<input type="text" name="name" class="form-control" placeholder="请输厂家人员列表名称" value="{$name}">
+				            </div>
+				            <button type="submit" class="btn btn-primary">查询</button>	          
+				          </form>
+				      	</div>
+	    			</nav>
+	             </div>
+	             <div class="box-body">
+	           	 <div class="row">
+	            	<div class="col-sm-12">
+		              <table id="list-table" class="table table-bordered table-striped dataTable">
+		                 <thead>
+		                   <tr role="row">
+			                   <th>姓名</th>	
+			                   <th>联系电话</th>	                   
+			                   <th>身份证</th>
+                               <th>进驻日期</th>
+			                   <th>状态</th>
+		                  	   <th>操作</th>
+		                   </tr>
+		                 </thead>
+						<tbody>
+                          <foreach name="list" item="vo" key="k" >
+                             <tr role="row">    
+		                     <td>{$vo.name}</td>	                    
+		                     <td>{$vo.mobile}</td>
+		                     <td>{$vo.shenfen}</td>                                     
+		                     <td>{$vo.time|date='Y-m-d',###}</td>
+		                     <td><if condition="$vo[status] eq 1">已审核<else/>未审核</if></td>
+		                   	<td class="text-center">
+		                      	<a class="btn btn-info" href="{:U('Users/cjlist_edit',array('id'=>$vo['id']))}">编辑</a>
+				     		</td>
+		                   </tr>
+		                  </foreach>
+		                   </tbody>
+		                 <tfoot>
+		                 
+		                 </tfoot>
+		               </table>
+	               </div>
+	          </div>
+              <div class="row">
+              	    <div class="col-sm-6 text-left">
+              	    	<button class="btn btn-default btn-sm checkbox-toggle"><i class="fa fa-square-o"></i></button>
+              	    </div>
+                    <div class="col-sm-6 text-right">{$page}</div>		
+              </div>
+	          </div>
+	        </div>
+       	</div>
+       </div>
+   </section>
+</div>
+</body>
+</html>   

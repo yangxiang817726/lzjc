@@ -31,7 +31,11 @@
         "pages/member/collect/collect",
         "pages/search/index",
         "pages/seller/index",
-        "pages/seller/goods"
+        "pages/seller/goods",
+		"pages/member/reg/add",
+        "pages/member/reg/sj"
+
+        "pages/member/regiest/index"      
     ],
     "window": {
         "navigationBarBackgroundColor": "#3AA0B7",

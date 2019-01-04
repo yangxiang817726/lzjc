@@ -14,7 +14,7 @@ function __args() {
 	if (setting.url.indexOf('http://') !== 0) {
 		//http://120.27.18.4/index.php/
 		//http://shops.wudhl.com/index.php/WXAPIhttps://www.505coder.com
-		setting.url = 'https://www.505coder.com/index.php/WXAPI' + setting.url;
+		setting.url = 'http://localhost/index.php/WXAPI' + setting.url;
 	}
 	return setting;
 }

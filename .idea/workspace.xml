@@ -66,19 +66,19 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Application/Admin/Controller/GoodsController.class.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="347">
-              <caret line="924" column="30" selection-start-line="924" selection-start-column="20" selection-end-line="924" selection-end-column="30" />
+            <state relative-caret-position="92">
+              <caret line="924" column="33" selection-start-line="924" selection-start-column="33" selection-end-line="924" selection-end-column="33" />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Application/Admin/View/Goods/addUnit.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="323">
+            <state relative-caret-position="578">
               <caret line="61" column="34" selection-start-line="61" selection-start-column="34" selection-end-line="61" selection-end-column="34" />
               <folding>
                 <element signature="n#style#0;n#span#0;n#td#1;n#tr#0;n#tbody#0;n#table#0;n#div#0;n#div#0;n#form#0;n#div#1;n#div#1;n#div#0;n#section#0;n#div#0;n#!!top" expanded="true" />
@@ -185,8 +185,8 @@
       <find>adHandle</find>
       <find>addunit</find>
       <find>ad_</find>
-      <find>ad_info</find>
       <find>ad_id</find>
+      <find>ad_info</find>
     </findStrings>
     <replaceStrings>
       <replace>属性</replace>
@@ -194,8 +194,8 @@
       <replace>Unit</replace>
       <replace>goods_unit</replace>
       <replace>单位</replace>
-      <replace>unit_info</replace>
       <replace>unit_id</replace>
+      <replace>unit_info</replace>
     </replaceStrings>
   </component>
   <component name="Git.Settings">
@@ -418,12 +418,12 @@
       <updated>1546050491179</updated>
       <workItem from="1546050492557" duration="440000" />
       <workItem from="1546050934098" duration="5523000" />
-      <workItem from="1546068973973" duration="88353000" />
+      <workItem from="1546068973973" duration="89007000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="94316000" />
+    <option name="totallyTimeSpent" value="94970000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
@@ -799,20 +799,20 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/Application/Admin/Controller/GoodsController.class.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="92">
+          <caret line="924" column="33" selection-start-line="924" selection-start-column="33" selection-end-line="924" selection-end-column="33" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/Application/Admin/View/Goods/addUnit.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
+        <state relative-caret-position="578">
           <caret line="61" column="34" selection-start-line="61" selection-start-column="34" selection-end-line="61" selection-end-column="34" />
           <folding>
             <element signature="n#style#0;n#span#0;n#td#1;n#tr#0;n#tbody#0;n#table#0;n#div#0;n#div#0;n#form#0;n#div#1;n#div#1;n#div#0;n#section#0;n#div#0;n#!!top" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Application/Admin/Controller/GoodsController.class.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="347">
-          <caret line="924" column="30" selection-start-line="924" selection-start-column="20" selection-end-line="924" selection-end-column="30" />
         </state>
       </provider>
     </entry>

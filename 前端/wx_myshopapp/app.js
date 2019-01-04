@@ -22,7 +22,8 @@ App({
 		wx.login({
 			success: function (res) {
 				if (res.code) {
-					server.getJSON("/User/getOpenid",{url:'https://api.weixin.qq.com/sns/jscode2session?appid=wx3e080db0119a9e4b&secret=bca78a4ec70c81982ed786299d786335&js_code=' + res.code + '&grant_type=authorization_code&code=' + res.code },function(res){
+          console.log(res.code)
+          server.getJSON("/User/getOpenid", { url:'https://api.weixin.qq.com/sns/jscode2session?appid=wx9cdaee1bca401224&secret=ec27fb8f4ee52c9f55dbb1c5feadecbd&js_code=' + res.code + '&grant_type=authorization_code&code=' + res.code },function(res){
 // 获取openId
 							var openId = res.data.openid;
 							// TODO 缓存 openId

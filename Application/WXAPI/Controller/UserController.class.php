@@ -182,24 +182,115 @@ class UserController extends BaseController {
         $data = $this->userLogic->add_address($this->user_id,$address_id,I('post.')); // 获取用户信息
         exit(json_encode($data));
     }
-    
+    //注册加工户
+    public function addUserjg(){
+
+        $object = file_get_contents('php://input');
+        $_POST = (json_decode($object, true));
+        if($_POST){
+            $mobile =  $_POST['mobile'];
+            if(M('users_jg')->where("mobile='$mobile'")->count()>0){
+                        exit(json_encode(array('status'=>1,'msg'=>'电话号码已存在','result'=>''))); 
+            }
+
+            /*$user_id = M('users')->where("email='$user_name' or mobile='$user_name'")->getField('user_id');
+            if($user_id){
+                if(M('store')->where(array('user_id'=>$user_id))->count()>0){
+                    $this->error("该会员已经申请开通过店铺");
+                }
+            }*/
+            $user = array('mobile'=>$mobile,'status'=>1,
+                    'user_name'=>$mobile,'password'=>I('password'),
+                    'reg_time'=>time()
+            );
+
+            $user['password'] = encrypt($user['password']);
+            $user_id = M('users')->add($user);
+            if($user_id){
+                        $add['name'] =I('mobile');
+                        $add['mobile'] =I('mobile');
+                        $add['time'] =time();
+                        $add['shenfen'] =I('shenfen');
+                        $add['status'] =1;
+                        $add['user_id'] =$user_id;
+                        $add['address'] =I('address');
+                        $add['city_id'] =I('city');
+                        $add['province_id'] =I('province');
+                        $add['district'] =I('district');
+                        M('users_jg')->add($add);
+                        exit(json_encode(array('status'=>1,'msg'=>'提交成功','result'=>''))); 
+
+                }else{
+                        exit(json_encode(array('status'=>1,'msg'=>'网络错误','result'=>''))); 
+
+                }
+        }
+
+    }
+
+//注册司机
+    public function addUsersj(){
+
+        $object = file_get_contents('php://input');
+        $_POST = (json_decode($object, true));
+        if($_POST){
+            $mobile =  $_POST['mobile'];
+            if(M('users_sj')->where("mobile='$mobile'")->count()>0){
+                        exit(json_encode(array('status'=>1,'msg'=>'电话号码已存在','result'=>''))); 
+            }
+
+            /*$user_id = M('users')->where("email='$user_name' or mobile='$user_name'")->getField('user_id');
+            if($user_id){
+                if(M('store')->where(array('user_id'=>$user_id))->count()>0){
+                    $this->error("该会员已经申请开通过店铺");
+                }
+            }*/
+            $user = array('mobile'=>$mobile,'status'=>1,
+                    'user_name'=>$mobile,'password'=>I('password'),
+                    'reg_time'=>time()
+            );
+
+            $user['password'] = encrypt($user['password']);
+            $user_id = M('users')->add($user);
+            if($user_id){
+                        $add['name'] =I('mobile');
+                        $add['mobile'] =I('mobile');
+                        $add['time'] =time();
+                        $add['shenfen'] =I('shenfen');
+                        $add['status'] =1;
+                        $add['user_id'] =$user_id;
+                        $add['address'] =I('address');
+                        $add['city_id'] =I('city');
+                        $add['province_id'] =I('province');
+                        $add['district'] =I('district');
+                        $add['address1'] =I('address1');
+                        $add['city_id1'] =I('city1');
+                        $add['province_id1'] =I('province1');
+                        $add['district1'] =I('district1');
+                        M('users_sj')->add($add);
+                        exit(json_encode(array('status'=>1,'msg'=>'提交成功','result'=>''))); 
+
+                }else{
+                        exit(json_encode(array('status'=>1,'msg'=>'网络错误','result'=>''))); 
+
+                }
+        }
+
+    }
+
+
     /*
      * 编辑地址
      */
     public function editAddress(){
-    
-    	
     	//echo $address_id;
     	$object = file_get_contents('php://input');
     	$_POST = (json_decode($object, true));
-    	
     	$address_id = $_POST['address_id'];
         $this->user_id = $_POST['user_id'];
         //echo $this->user_id.'1';
         if(!$this->user_id) exit(json_encode(array('status'=>-1,'msg'=>'缺少参数','result'=>'')));
-        
         //echo $address_id;
-        
         //echo $_POST['address'];
         M('user_address')->where(array("address_id"=>$address_id))->save(array("address"=>$_POST['address'],"mobile"=>$_POST['mobile'],'zipcode'=>$_POST['zipcode'],'consignee'=>$_POST['consignee'],'province'=>$_POST['province'],'city'=>$_POST['city'],'district'=>$_POST['district']));
         exit(json_encode(array('status'=>1,'msg'=>'成功','result'=>'')));

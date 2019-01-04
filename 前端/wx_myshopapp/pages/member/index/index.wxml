@@ -67,6 +67,16 @@
 	<text>关于我们</text>
 </view>
 
+<view bindtap="jgf" class="tableviewcell">
+	<image src="../../../images/rz.png" />
+	<text>加工户入驻</text>
+</view>
+<view bindtap="sj" class="tableviewcell">
+	<image src="../../../images/rz.png" />
+	<text>司机入驻</text>
+</view>
+
+
 <view bindtap="logout" class="tableviewcell">
 	<image src="../../../images/rz.png" />
 	<text>免费入驻</text>

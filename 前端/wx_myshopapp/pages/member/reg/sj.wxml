@@ -8,7 +8,7 @@
 <view class="class-line"></view>
 
 <view class="view-row">
-<text >地区</text>
+<text >收货点地区</text>
 <text bindtap="cascadePopup" style="width:50%">{{areaSelectedStr}}</text>
 </view>
 
@@ -16,17 +16,42 @@
 
 
 <view class="view-row">
-<text >详细地址</text>
+<text >收货点详细地址</text>
 <input bindchange="addressChange"  placeholder-class="input-placeholder" placeholder="请输入"/>
 </view>
+<view class="class-line"></view>
 
+<view class="view-row">
+<text >到货点地区</text>
+<text bindtap="cascadePopup1" style="width:50%">{{areaSelectedStr1}}</text>
+</view>
+<view class="view-row">
+<text >到货点详细地址</text>
+<input bindchange="address1Change"  placeholder-class="input-placeholder" placeholder="请输入"/>
+</view>
 <view class="class-line"></view>
 
 
 <view class="view-row">
 <text >手机</text>
-<input bindchange="phoneChange" placeholder-class="input-placeholder" placeholder="请输入"/>
+<input bindchange="phoneChange" placeholder-class="input-placeholder" placeholder="请输入手机"/>
 </view>
+<view class="view-row">
+<text >密码</text>
+<input bindchange="passwordChange" placeholder-class="input-placeholder" placeholder="请输入用户密码"/>
+</view>
+
+
+    <!-- <button type="default" size="mini" bindtap="chooseImage" >添加图片</button>
+
+  <view class="question-images">
+    <block wx:for="{{images}}" wx:key="*this">
+      <view class="q-image-wrap">
+        <image class="q-image" src="{{item}}" mode="aspectFill" data-idx="{{index}}" bindtap="handleImagePreview"></image>
+        <view class="q-image-remover" data-idx="{{index}}" bindtap="removeImage">删除</view>
+      </view>
+    </block>
+  </view> -->
 
 
 
@@ -96,16 +121,3 @@
 	    </view>
 	</view>
 </view>
-
-
-<!--
-
-<form bindsubmit="formSubmit">
-    <text bindtap="cascadePopup" class="area_select">{{areaSelectedStr}}</text>
-	<input name="detail" placeholder="详情地址" value="{{address.detail}}" />
-	<input name="realname" placeholder="收件人姓名" value="{{address.realname}}" />
-	<input name="mobile" placeholder="手机号码" value="{{address.mobile}}" type="number"/>
-	<button formType="submit" type="primary">保存</button>
-</form>
-
--->

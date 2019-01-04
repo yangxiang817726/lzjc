@@ -1,0 +1,165 @@
+<include file="Public/min-header" />
+<style>
+input{
+	border: none;
+}
+</style>
+<div class="wrapper">
+	<include file="Public/breadcrumb"/>
+	<section class="content">
+       <div class="row">
+       		<div class="col-xs-12">
+	       		<div class="box">
+	             <div class="box-header">
+	           	   <nav class="navbar navbar-default">	     
+				      <div class="collapse navbar-collapse">
+	    				<div class="navbar-form form-inline">
+				            <div class="form-group">
+				            	<p class="text-success margin blod">区域人员添加:</p>
+				            </div>
+				             <div class="form-group">
+				             <if>
+                  
+                                 <a class="btn btn-default" href="{:U('Users/qylist')}">管理</a>&nbsp;&nbsp;&nbsp;&nbsp;
+                              </if>
+				            </div>
+	                        <div class="pull-right">
+				                <a href="javascript:history.go(-1)" data-toggle="tooltip" title="" class="btn btn-default" data-original-title="返回"><i class="fa fa-reply"></i></a>
+				            </div>
+				          </div>
+				       </div>
+	    		 	</nav>	
+<!-- 	               	<nav class="navbar navbar-default">
+		            	<if condition="$is_own_shop eq 1">
+		            	<div class="callout callout-inro">
+			            	<p>平台可以在此处添加自营店铺，新增的自营店铺默认为开启状态</p>
+							<p>新增自营店铺默认绑定所有经营类目并且佣金为0，可以手动设置绑定其经营类目</p>
+							<p>新增自营店铺将自动创建店主会员账号（用于登录网站会员中心）以及商家账号（用于登录商家中心）</p>
+						</div>
+						<else/>
+						<div class="callout callout-inro">
+							<p>1. 平台可以在此处添加外驻店铺，新增的外驻店铺默认为开启状态</p>
+					        <p>2. 新增外驻店铺默认绑定所有经营类目并且佣金为0，可以手动设置绑定其经营类目。</p>
+					        <p>3. 新增外驻店铺将自动创建店主会员账号（用于登录网站会员中心）以及商家账号（用于登录商家中心）。</p>
+		            	</div>
+						</if>
+	    			</nav> -->
+	             </div>
+	             <div class="box-body">
+	           	 <div class="row">
+	            	<div class="col-sm-12">
+	            	  <form method="post" id="store_info">
+	            	  	<input name="id" value="{$info.id}"  type="hidden" readonly="readonly">
+		              <table class="table table-bordered table-striped dataTable">
+                        <tbody> 
+                        <tr><td>姓名：</td>
+                        	<td><input name="name" value="{$info.name}"  readonly="readonly"></td>
+                        	<td></td>
+                        </tr>
+                        <tr><td>电话：</td>
+                        	<td><input type="text" name="mobile" value="{$info.mobile}" readonly="readonly" ></td>
+                        	<td class="text-warning">用于登录会员中心,支持手机</td>
+                        </tr>
+
+                        <tr>
+                            <td>身份证：</td>
+                       		   <td>
+                        	<div class="text-center">
+                        		<a href="{$info.shenfen}" target="_blank">
+                        		<if condition="$info.shenfen eq ''">
+                        			<img id="shenfen" src="__PUBLIC__/images/not_adv.jpg" height="120">
+                        		<else/>
+                        			<img id="shenfen" src="{$info.shenfen}" height="120">
+                        		</if>
+                        		</a>
+                        	</div>
+                 
+		                 </td>
+		                                        		<td class="text-warning">验证用户身份证</td>
+
+                        </tr>
+                     
+                   
+                        <tr>
+                            <td>状态：</td>
+                            <td><input type="radio" name="status" value="1" onclick="$('#close_reason').hide();" checked="">已审核
+                            	<input type="radio" name="status" onclick="$('#close_reason').show();" value="2">未审核
+                            </td>
+		                 </tr>  
+                        </tbody>
+                        <tfoot>
+                        <tr>
+                        <td colspan="3" style="text-align:center;">
+                        	<a href="javascript:void(0)" onclick="actsubmit()" class="btn btn-info margin">提交</a>
+                        </td>
+                        </tr>
+                        </tfoot>
+		               </table>
+		               </form>
+	               </div>
+	            </div>
+	          </div>
+	        </div>
+       	</div>
+       </div>
+   </section>
+<script>
+var flag = true;
+function actsubmit(){
+	if($('input[name=name]').val() == ''){
+		layer.msg("姓名不能为空", {icon: 2,time: 2000});
+		return;
+	}
+	if($('input[name=mobile]').val() == ''){
+		layer.msg("电话号码", {icon: 2,time: 2000});
+		return;
+	}
+	/*var user_name = $('input[name=user_name]').val();
+	if(user_name == ''){
+		layer.msg("店主账号不能为空", {icon: 2,time: 2000});
+		return;
+	}
+	if(!checkEmail(user_name) && !checkMobile(user_name)){
+		layer.msg("前台账号格式有误", {icon: 2,time: 2000});
+		return;
+	}*/
+
+	if($('input[name=password]').val() == ''){
+		layer.msg("登陆密码不能为空", {icon: 2,time: 2000});
+		return;
+	}
+	if(flag){
+		$('#store_info').submit();
+	}
+}
+var tmp_type = '';
+function upload_img(cert_type){
+	tmp_type = cert_type;
+	GetUploadify(1,'store','cert','callback');
+}
+
+function callback(img_str){
+	$('#'+tmp_type).attr('src',img_str);
+	$('input[name='+tmp_type+']').val(img_str);
+}
+function store_check(){
+	$.ajax({
+		type:'post',
+		url:"{:U('Store/store_check')}",
+		dataType:'json',
+		data:{store_name:$('input[name=store_name]').val(),seller_name:$('input[name=seller_name]').val(),user_name:$('input[name=user_name]').val()},
+		success:function(res){
+			if(res.stat != 'ok'){
+				layer.msg(res.msg, {icon: 2,time: 2000});
+				flag = false;
+				return;
+			}else{
+				flag = true;
+			}
+		}
+	});
+}
+</script>
+</div>
+</body>
+</html>   

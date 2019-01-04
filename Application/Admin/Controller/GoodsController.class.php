@@ -496,7 +496,7 @@ class GoodsController extends BaseController {
                 'goods_category' => 'id',
                 'brand' => 'id',            
                 'goods_attribute' => 'attr_id',
-        		'ad' =>'unit_id',            
+        		'ad' =>'ad_id',            
         );        
         $model = D($_POST['table']);
         $model->$primary[$_POST['table']] = $_POST['id'];

@@ -3,6 +3,7 @@ var app = getApp()
 var maxTime = 60 
 var interval = null 
 var currentTime = -1 //倒计时的事件（单位：s）  
+var server = require('../../../utils/server');
 
 Page({
 	
@@ -81,59 +82,27 @@ wx.navigateTo({
 		});
 	},
 	logout: function () {
-
-wx.navigateTo({
-  url: '../../seller/add',
-  success: function(res){
-    // success
-  },
-  fail: function(res) {
-    // fail
-  },
-  complete: function(res) {
-    // complete
-  }
-})
-    return ;
-		   var app = getApp();
-       app.globalData.login = false;
-       app.globalData.userInfo = null;
-
-       wx.request({
-         url: 'https://wudhl.com/index.php/Api/User/logoutWX/openid/' + app.globalData.openid,
-         data: {},
-         method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
-         // header: {}, // 设置请求的 header
-         success: function(res){
-           // success
-           if(res.data.code == 200)
-           {
-              
-       wx.showToast({
-              title: '注销成功',
-              icon: 'success',
-            });
-
-           timeout = setTimeout(function doHandler()
-       {
-            wx.switchTab({
-              url: '/pages/index/index'
-            });
-			
-        },2000);//使用字符串执行方法
+    var user_id = getApp().globalData.userInfo.user_id
+    console.log(user_id);
+    server.getJSON('/User/checkisbind/user_id/' + user_id , function (res) {
+            if(res.data.code==400){
+              wx.showToast({ title: '已经绑定过了店铺', icon: 'success', duration: 2000 })
+            }
+            if(res.data.code==100){
+              wx.navigateTo({
+                url: '../../member/regiest/index'       //跳转到绑定页面
+              });
+            }
+            if(res.data.code==200){
+              wx.navigateTo({
+               url: '../../seller/add'      //跳转到入驻页面
+              });
+            }
+    });
+  
 
 
-           }
-         },
-         fail: function() {
-           // fail
-         },
-         complete: function() {
-           // complete
-         }
-       })
-
-       
+		 
 	},
 	onShow: function () {
 		var that = this;
@@ -185,7 +154,16 @@ wx.navigateTo({
 			url: '/pages/member/aboutus/aboutus'
 		});
 	},
-
+  sj: function () {
+    wx.navigateTo({
+      url: '/pages/member/reg/sj'
+    });
+  },
+  jgf: function () {
+    wx.navigateTo({
+      url: '/pages/member/reg/add'
+    });
+  },
 
 	turnTologin: function (e) {
     //转为登录

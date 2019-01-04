@@ -1,0 +1,12 @@
+
+
+
+<view class="view-item">
+<text>手机号码</text>
+<input bindchange="sellercContactPhone"  placeholder-class="place-input" placeholder="您的电话" value="{{apply.sellerccontactphone}}"/>
+</view>
+
+<view class="vrz"  style="width:100%;">
+
+<text  bindtap="sumbit" class="rz">绑定</text>
+</view>

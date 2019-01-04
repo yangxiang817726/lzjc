@@ -1,1 +1,44 @@
- 
+public function sjlist_add(){
+		if(IS_POST){
+			$mobile = I('mobile');
+			$name = I('name');
+			if(M('users_sj')->where("mobile='$mobile'")->count()>0){
+				$this->error("电话号码已存在");
+			}
+			if(M('users_sj')->where("name='$name'")->count()>0){
+			}
+			/*$user_id = M('users')->where("email='$user_name' or mobile='$user_name'")->getField('user_id');
+			if($user_id){
+				if(M('store')->where(array('user_id'=>$user_id))->count()>0){
+					$this->error("该会员已经申请开通过店铺");
+				}
+			}*/
+			$user = array('mobile'=>$mobile,'status'=>1,
+					'user_name'=>$mobile,'password'=>I('password'),
+					'reg_time'=>time()
+			);
+			$user['password'] = encrypt($user['password']);
+			$user_id = M('users')->add($user);
+			if($user_id){
+						$add['name'] =I('name');
+						$add['mobile'] =I('mobile');
+						$add['time'] =time();
+						$add['shenfen'] =I('shenfen');
+						$add['status'] =1;
+						$add['user_id'] =$user_id;
+						$add['address'] =I('address');
+						$add['city_id'] =I('city_id');
+						$add['province_id'] =I('province_id');
+						$add['district'] =I('district');
+						M('users_sj')->add($add);
+						$this->success('加工户添加成功',U('users/sjlist'));
+				
+					exit;
+				}else{
+					$this->error("添加失败");
+				}
+		}
+				$province = M('region')->where(array('parent_id'=>0,'level'=>1))->select();
+		$this->assign('province',$province);
+		$this->display();
+	} 
