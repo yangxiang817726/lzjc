@@ -36,10 +36,7 @@
 <text >手机</text>
 <input bindchange="phoneChange" placeholder-class="input-placeholder" placeholder="请输入手机"/>
 </view>
-<view class="view-row">
-<text >密码</text>
-<input bindchange="passwordChange" placeholder-class="input-placeholder" placeholder="请输入用户密码"/>
-</view>
+
 
 
     <!-- <button type="default" size="mini" bindtap="chooseImage" >添加图片</button>

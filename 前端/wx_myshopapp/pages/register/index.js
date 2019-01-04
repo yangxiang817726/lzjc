@@ -3,7 +3,7 @@ var app = getApp()
 var maxTime = 60 
 var interval = null 
 var currentTime = -1 //倒计时的事件（单位：s）  
-var server = require('../../utils/server');
+var server = require('../../utils/server.js');
 Page({
 	
 	data: {

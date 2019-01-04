@@ -11,18 +11,13 @@ Page({
     var password = this.data.password;
 
 		//var user_id = getApp().globalData.userInfo.user_id
-    var user_id = 794;
+    var user_id = getApp().globalData.userInfo.user_id;
 		var country = 1;
-
-
 		var province = this.data.provinceObjects[this.data.provinceIndex].id;
-
 		var city = this.data.cityObjects[this.data.cityIndex].id;
-
 		var district = this.data.regionObjects[this.data.regionIndex].id;
-		
 		var that = this;
-    server.postJSON('/User/addUserjg/user_id/794',{user_id:794,shenfen:shenfen,mobile:mobile,password:password,address:address,province:province,city:city,district:district},function(res){
+    server.postJSON('/User/addUserjg', {user_id:user_id,shenfen:shenfen,mobile:mobile,password:password,address:address,province:province,city:city,district:district},function(res){
 
 if(res.data.status == 1)
 			{

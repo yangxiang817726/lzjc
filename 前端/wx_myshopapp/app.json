@@ -32,10 +32,10 @@
         "pages/search/index",
         "pages/seller/index",
         "pages/seller/goods",
-		"pages/member/reg/add",
-        "pages/member/reg/sj"
-
-        "pages/member/regiest/index"      
+		    "pages/member/reg/add",
+        "pages/member/reg/sj",
+        "pages/member/regiest/index",
+        "pages/load/load"                      
     ],
     "window": {
         "navigationBarBackgroundColor": "#3AA0B7",

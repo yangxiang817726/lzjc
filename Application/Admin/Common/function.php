@@ -195,15 +195,15 @@ function getAllMenu(){
 			
 			
 			
-            /* * 
+            
            
 			'distribut' => array('name' => '分销管理', 'icon'=>'fa-cubes', 'sub_menu' => array(
 					array('name' => '分销商列表', 'act'=>'distributor_list', 'control'=>'Distribut'),
 					array('name' => '分销关系', 'act'=>'tree', 'control'=>'Distribut'),
-//					array('name' => '提现申请', 'act'=>'withdrawals', 'control'=>'Distribut'),
+					array('name' => '提现申请', 'act'=>'withdrawals', 'control'=>'Distribut'),
 					array('name' => '分成日志', 'act'=>'rebate_log', 'control'=>'Distribut'),
 			)),
-   */           
+           
 			'tools' => array('name' => '插件工具', 'icon'=>'fa-plug', 'sub_menu' => array(
 					
 					array('name' => '数据备份', 'act'=>'index', 'control'=>'Tools'),

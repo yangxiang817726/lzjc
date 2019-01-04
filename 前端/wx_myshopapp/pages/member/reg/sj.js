@@ -11,10 +11,9 @@ Page({
     var password = this.data.password;
 
 		//var user_id = getApp().globalData.userInfo.user_id
-    var user_id = 794;
 		var country = 1;
 
-
+    var user_id = getApp().globalData.userInfo.user_id;
 		var province = this.data.provinceObjects[this.data.provinceIndex].id;
 
 		var city = this.data.cityObjects[this.data.cityIndex].id;
@@ -29,7 +28,7 @@ Page({
     var district1 = this.data.district1;
 
 		var that = this;
-    server.postJSON('/User/addUsersj/user_id/794',{user_id:794,shenfen:shenfen,mobile:mobile,password:password,address:address,province:province,city:city,district:district,province1:province1,city1:city1,district1:district1},function(res){
+    server.postJSON('/User/addUsersj/',{user_id:user_id,shenfen:shenfen,mobile:mobile,password:password,address:address,province:province,city:city,district:district,province1:province1,city1:city1,district1:district1},function(res){
 
 if(res.data.status == 1)
 			{

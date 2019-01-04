@@ -1,5 +1,5 @@
 // pages/seller/add.js
-var server = require('../../utils/server');
+var server = require('../../../utils/server');
 Page({
   data: {},
   onLoad: function (options) {
