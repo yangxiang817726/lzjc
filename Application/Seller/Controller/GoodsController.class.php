@@ -279,6 +279,9 @@ class GoodsController extends BaseController {
             $suppliersList = M("suppliers")->select();
             $plugin_shipping = M('plugin')->where(array('type'=>array('eq','shipping')))->select();//插件物流
             $shipping_area = D('shipping_area')->getShippingArea(STORE_ID);//配送区域
+
+            $unitList = M('Goods_unit')->select(); //单位查询
+            $this->assign('unitList', $unitList);
             $goods_shipping_area_ids = explode(',',$goodsInfo['shipping_area_ids']);
             $this->assign('goods_shipping_area_ids',$goods_shipping_area_ids);
             $this->assign('shipping_area',$shipping_area);

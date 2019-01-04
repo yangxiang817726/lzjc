@@ -33,7 +33,7 @@
         "pages/seller/index",
         "pages/seller/goods",
 		"pages/member/reg/add",
-        "pages/member/reg/sj"
+        "pages/member/reg/sj",
 
         "pages/member/regiest/index"      
     ],

@@ -308,6 +308,23 @@
                                     </td>
                                 </tr>
                                 <tr>
+                                    <td>单位:</td>
+                                    <td>
+                                        <select name="unit_id" id="unit_id" class="form-control" style="width:250px;">
+
+                                            <foreach name="unitList" item="v" key="k" >
+
+                                                    <option value="{$v['unit_id']}"   <if condition="$v['unit_id'] eq $goodsInfo['unit_id'] ">selected="selected"</if>>
+                                                    {$v['unit_name']}
+                                                    </option>
+
+                                            </foreach>
+                                        </select>
+
+
+                                    </td>
+                                </tr>
+                                <tr>
                                     <td>赠送积分:</td>
                                     <td>
                                         <input type="text" class="form-control" style="width:150px;" value="{$goodsInfo.give_integral}" name="give_integral" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onpaste="this.value=this.value.replace(/[^\d.]/g,'')" />
