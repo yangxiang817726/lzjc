@@ -57,7 +57,7 @@ class UsersController extends BaseController{
 			}*/
 			$user = array('mobile'=>$mobile,'status'=>1,
 					'user_name'=>$mobile,'password'=>I('password'),
-					'reg_time'=>time()
+					'reg_time'=>time(),'user_type'=>'区域管理员'
 			);
 			$admin = array('user_name'=>$mobile,'status'=>1,
 					'password'=>I('password'),
@@ -150,7 +150,7 @@ class UsersController extends BaseController{
 			}*/
 			$user = array('mobile'=>$mobile,'status'=>1,
 					'user_name'=>$mobile,'password'=>I('password'),
-					'reg_time'=>time()
+					'reg_time'=>time(),'user_type'=>'加工户'
 			);
 			$user['password'] = encrypt($user['password']);
 			$user_id = M('users')->add($user);
@@ -232,7 +232,7 @@ class UsersController extends BaseController{
 			}*/
 			$user = array('mobile'=>$mobile,'status'=>1,
 					'user_name'=>$mobile,'password'=>I('password'),
-					'reg_time'=>time()
+					'reg_time'=>time(),'user_type'=>'厂家'
 			);
 			$user['password'] = encrypt($user['password']);
 			$user_id = M('users')->add($user);
@@ -311,9 +311,10 @@ class UsersController extends BaseController{
 					$this->error("该会员已经申请开通过店铺");
 				}
 			}*/
+
 			$user = array('mobile'=>$mobile,'status'=>1,
 					'user_name'=>$mobile,'password'=>I('password'),
-					'reg_time'=>time()
+					'reg_time'=>time(),'user_type'=>'司机'
 			);
 			$user['password'] = encrypt($user['password']);
 			$user_id = M('users')->add($user);

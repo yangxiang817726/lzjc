@@ -46,9 +46,9 @@
                             <td><input type="password" name="password" value="{$info.password}"></td>
                        		<td class="text-warning">密码为6-16位字母数字组合</td>
                         </tr>
-                        		   				<tr><td>所在地:</td>
+                        <tr><td>收货点:</td>
 				                    	<td> <div class="form-group ">
-                                    	<div class="col-xs-3">
+                                    	<div class="col-xs-2">
                                         <select onchange="get_city(this)" id="province" name="province_id" class="form-control">
                                             <option value="0">选择省份</option>
                                             <volist name="province" id="vo">
@@ -56,7 +56,7 @@
                                             </volist>
                                         </select>
                                          </div>   
-                                        <div class="col-xs-3">                                        
+                                        <div class="col-xs-2">                                        
                                         <select onchange="get_area(this)" id="city" name="city_id" class="form-control">
                                             <option value="0">选择城市</option>
                                             <volist name="city" id="vo">
@@ -64,25 +64,64 @@
                                             </volist>
                                         </select>
                                         </div>   
-                                        <div class="col-xs-3">                                        
+                                        <div class="col-xs-2">                                        
                                         <select id="district" name="district" class="form-control">
                                             <option value="0">选择区域</option>
                                             <volist name="area" id="vo">
                                                 <option value="{$vo.id}">{$vo.name}</option>
                                             </volist>
                                         </select>
-                                         </div>   
+                                         </div> 
+                                        <div class="col-xs-4">                                        
+                                            <input name="address" value="{$info.address}" class="form-control" placeholder="详细地址">
+                                         </div>    
                                          </div> 
                                         </td>
 			
 				                    </tr>
 
 				                 <tr>
-                            <td>详细地址</td>
-                       				                        <td><input name="address" value="{$info.address}" class="form-control" style="width: 176px"></td>
-                       				                        	<td></td>
+        
 
-                        </tr>     
+                        </tr>
+                                        <tr><td>送货点:</td>
+                                        <td> <div class="form-group ">
+                                        <div class="col-xs-2">
+                                        <select onchange="get_city(this)" id="province" name="province_id1" class="form-control">
+                                            <option value="0">选择省份</option>
+                                            <volist name="province" id="vo">
+                                                <option value="{$vo.id}" <if condition="$vo[id] eq $info[province_id1]">selected</if>>{$vo.name}</option>
+                                            </volist>
+                                        </select>
+                                         </div>   
+                                        <div class="col-xs-2">                                        
+                                        <select onchange="get_area(this)" id="city1" name="city_id1" class="form-control">
+                                            <option value="0">选择城市</option>
+                                            <volist name="city" id="vo">
+                                                <option value="{$vo.id}">{$vo.name}</option>
+                                            </volist>
+                                        </select>
+                                        </div>   
+                                        <div class="col-xs-2">                                        
+                                        <select id="district1" name="district1" class="form-control">
+                                            <option value="0">选择区域</option>
+                                            <volist name="area" id="vo">
+                                                <option value="{$vo.id}">{$vo.name}</option>
+                                            </volist>
+                                        </select>
+                                         </div>   
+                                        <div class="col-xs-4">                                        
+                                            <input name="address1" value="{$info.address1}" class="form-control" placeholder="详细地址">
+                                         </div>  
+                                         </div> 
+                                        </td>
+            
+                                    </tr>
+
+                                 <tr>
+               
+
+                        </tr>       
                         <tr>
                             <td>身份证：</td>
                        		   <td>
