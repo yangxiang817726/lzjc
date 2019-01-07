@@ -195,7 +195,7 @@ function getAllMenu(){
 			
 			
 			
-            /* * 
+            /* *
            
 			'distribut' => array('name' => '分销管理', 'icon'=>'fa-cubes', 'sub_menu' => array(
 					array('name' => '分销商列表', 'act'=>'distributor_list', 'control'=>'Distribut'),

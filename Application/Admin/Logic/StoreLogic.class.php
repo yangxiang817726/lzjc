@@ -172,8 +172,8 @@ class StoreLogic extends Model
         $today_time = time();
         $auto_transfer_date = tpCache('shopping.auto_transfer_date');
         $auto_transfer_date = $auto_transfer_date * (60 * 60 * 24); // 1天的时间戳        
-                        
-        $sql = "select order_id from __PREFIX__order where store_id = $store_id and order_status in(2,4) and (($today_time - confirm_time) >  $auto_transfer_date) and is_checkout = 0";
+        //$sql = "select order_id from __PREFIX__order where store_id = $store_id and order_status in(2,4) and (($today_time - confirm_time) >  $auto_transfer_date) and is_checkout = 0";
+        $sql = "select order_id from __PREFIX__order where store_id = $store_id and order_status in(2,4) and is_checkout = 0";
         
         $Model = new \Think\Model(); // 实例化一个model对象 没有对应任何数据表
         $list = $Model->query($sql);
@@ -192,18 +192,20 @@ class StoreLogic extends Model
             $order_settlement = order_settlement($val['order_id']); // 调用全局结算方法
             $data['order_totals'] += $order_settlement[0]['goods_amount'];// 订单商品金额    
             $data['shipping_totals'] += $order_settlement[0]['shipping_price'];// 运费    
-            $data['return_integral'] +=  $order_settlement[0]['return_integral'];// 退还积分    
-            $data['commis_totals'] +=  $order_settlement[0]['settlement'];// 平台抽成
-            $data['give_integral'] +=  $order_settlement[0]['give_integral'];// 送出积分金额
+            $data['return_integral'] +=  $order_settlement[0]['return_integral'];// 退还积分
+            $data['commis_totals'] +=  $order_settlement[0]['commis_totals'];// 平台抽成
+//            $data['give_integral'] +=  $order_settlement[0]['give_integral'];// 送出积分金额
             $data['result_totals'] +=  $order_settlement[0]['store_settlement'];// 本期应结
-            $data['order_prom_amount'] +=  $order_settlement[0]['order_prom_amount'];// 优惠价
-            $data['coupon_price'] +=  $order_settlement[0]['coupon_price'];// 优惠券抵扣
-            $data['distribut'] +=  $order_settlement[0]['distribut'];// 分销金额
-                         
-            M('order')->where("order_id = {$val['order_id']}")->save(array('is_checkout' =>1)); // 标识为已经结算            
+//            $data['order_prom_amount'] +=  $order_settlement[0]['order_prom_amount'];// 优惠价
+//            $data['coupon_price'] +=  $order_settlement[0]['coupon_price'];// 优惠券抵扣
+//            $data['distribut'] +=  $order_settlement[0]['distribut'];// 分销金额
+            $data['integral'] +=  $order_settlement[0]['integral'];// 所用积分
+            $data['return_totals'] +=  $order_settlement[0]['return_totals'];// 退回金额
+            $data['result_integral'] +=  $order_settlement[0]['result_integral'];// 实际应该获得的积分
+//            M('order')->where("order_id = {$val['order_id']}")->save(array('is_checkout' =>1)); // 标识为已经结算
         }              
-        M('order_statis')->add($data); // 添加一笔结算统计                
-        // 给商家加钱 记录日志
-        storeAccountLog($store_id,$data['result_totals'],$data['result_totals'] * -1,'平台订单结算');        
+//        M('order_statis')->add($data); // 添加一笔结算统计
+        // 给商家加钱 和加积分记录日志
+        storeAccountLog($store_id,$data['result_totals'],$data['result_totals'] * -1,'平台订单结算','',$data['result_integral']);
     }
 }

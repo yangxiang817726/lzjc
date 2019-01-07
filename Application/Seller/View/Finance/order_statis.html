@@ -35,13 +35,15 @@
                                 <th class="sorting text-left">开始时间</th> 
                                 <th class="sorting text-left">结束时间</th>                                                                                                
                                 <th class="sorting text-left">订单商品金额</th>
-                                <th class="sorting text-left">运费</th>
-                                <th class="sorting text-left">平台抽成</th>
-                                <th class="sorting text-left">积分金额</th>
-                                <th class="sorting text-left">分销金额</th>                                
-                                <th class="sorting text-left">优惠价</th>
-                                <th class="sorting text-left">优惠券抵扣</th>                                                                
-                                <th class="sorting text-left">本期应结</th>
+                                <!--<th class="sorting text-left">运费</th>-->
+                                <th class="sorting text-left">平台扣去</th>
+                                <!--<th class="sorting text-left">积分金额</th>-->
+                                <th class="sorting text-left">收到积分</th>
+                                <th class="sorting text-left">应结积分</th>
+                                <!--<th class="sorting text-left">分销金额</th>                                -->
+                                <!--<th class="sorting text-left">优惠价</th>-->
+                                <!--<th class="sorting text-left">优惠券抵扣</th>                                                                -->
+                                <th class="sorting text-left">本期应结金额</th>
                                 <th class="sorting text-left">创建记录日期</th>
                                 <!--<th class="sorting text-left">申请提现记录</th>-->
                             </tr>
@@ -53,12 +55,14 @@
                                     <td class="text-left">{$v.start_date|date="Y-m-d H:i",###}</td>
                                     <td class="text-left">{$v.end_date|date="Y-m-d H:i",###}</td>
                                     <td class="text-left">{$v.order_totals}</td>
-                                    <td class="text-left">{$v.shipping_totals}</td>
-                                    <td class="text-left">{$v.commis_totals}</td>                                    
-                                    <td class="text-left">{$v.give_integral}</td>
-                                    <td class="text-left">{$v.distribut}</td>
-                                    <td class="text-left">{$v.order_prom_amount}</td>
-                                    <td class="text-left">{$v.coupon_price}</td>
+                                    <!--<td class="text-left">{$v.shipping_totals}</td>-->
+                                    <td class="text-left">{$v.commis_totals}积分</td>
+                                    <!--<td class="text-left">{$v.give_integral}</td>-->
+
+                                    <td class="text-left">{$v.integral}</td>
+                                    <td class="text-left">{$v.result_integral}</td>
+                                    <!--<td class="text-left">{$v.order_prom_amount}</td>-->
+                                    <!--<td class="text-left">{$v.coupon_price}</td>-->
                                     <td class="text-left">{$v.result_totals}</td>
                                     <td class="text-left">{$v.create_date|date="Y-m-d H:i",###}</td>
                                     <!--<td class="text-left"><a href="{:U('Admin/Distribut/editWithdrawals',array('id'=>$v[withdrawals_id]))}">查看</a></td>-->

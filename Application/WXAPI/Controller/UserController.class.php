@@ -789,12 +789,27 @@ class UserController extends BaseController {
     	$data['province'] = $_GET['province'];
     	$data['head_pic'] = $_GET['head_pic'];
     	$data['reg_time'] = time();
+        $_GET['first_leader']=1289;        //形成分销关系, 这里先写一个死值，后期根据时间推荐者ID来
+        if($_GET['first_leader'])
+            $data['first_leader'] = $_GET['first_leader']; // 微信授权登录返回时 get 带着参数的
+
+        // 如果找到他老爸还要找他爷爷他祖父等
+        if($data['first_leader'])
+        {
+            $first_leader = M('users')->where("user_id = {$data['first_leader']}")->find();
+            $data['second_leader'] = $first_leader['first_leader']; //  第一级推荐人
+
+        }else
+        {
+            $data['first_leader'] = 0;
+        }
+
     	$id = M('users')->add($data);
     	$res = M('users')->where(array("user_id"=>$id))->find();
     
     	$this->test($data['head_pic'],$id);
-    	$res = M('users')->where(array("user_id"=>$id))->find();
-    	$res['head_pic'] = SITE_URL.$res['head_pic'];
+//    	$res = M('users')->where(array("user_id"=>$id))->find();
+//    	$res['head_pic'] = SITE_URL.$res['head_pic'];
     	$res = M('users')->where(array("user_id"=>$id))->find();
     	if($res)
     	{

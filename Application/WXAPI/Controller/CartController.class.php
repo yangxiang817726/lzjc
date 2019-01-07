@@ -223,6 +223,9 @@ class CartController extends BaseController
             $addresslist[0] = M('UserAddress')->where("user_id = {$this->user_id} and is_default = 1")->find();
         }
         $points = M("config")->where(array("name"=>"point_rate"))->getField("value");
+        $bl_money_integral = M("config")->where(array("name"=>"bl_money_integral"))->getField("value");
+
+        $maxusepoint=(int)($cart_result['total_price']['total_fee']*$bl_money_integral/100);
         $json_arr = array(
             'status' => 1,
             'msg' => '获取成功',
@@ -231,6 +234,7 @@ class CartController extends BaseController
                 //'shippingList' => $shippingList, //物流列表
                 'cartList' => $cart_result['cartList'], // 购物车列表
                 'totalPrice' => $cart_result['total_price'], // 总计
+                'maxusepoint' =>$maxusepoint , // 最多可以用多少积分
                 'couponList' => $couponList, //优惠券列表
                 'userInfo' => $usersInfo, // 用户详情
                 "points"=>$points

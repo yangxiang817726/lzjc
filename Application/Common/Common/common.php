@@ -549,19 +549,21 @@ function accountLog($user_id, $user_money = 0,$pay_points = 0, $desc = '',$distr
  * @param   string  $desc    变动说明
  * @return  bool
  */
-function storeAccountLog($store_id, $store_money = 0,$pending_money,$desc = '',$order_id = 0){
+function storeAccountLog($store_id, $store_money = 0,$pending_money,$desc = '',$order_id = 0,$result_integral){
+
     /* 插入帐户变动记录 */
     $account_log = array(
         'store_id'       => $store_id,
         'store_money'    => $store_money, // 可用资金
         'pending_money'    => $pending_money, // 未结算资金
+        'store_integral'    => $result_integral, // 未结算资金
         'change_time'   => time(),
         'desc'   => $desc,
         'order_id'   => $order_id,        
     );
     /* 更新用户信息 */
     $sql = "UPDATE __PREFIX__store SET store_money = store_money + $store_money," .
-        " pending_money = pending_money + $pending_money WHERE store_id = $store_id";
+        " pending_money = pending_money + $pending_money, store_integral=store_integral + $result_integral  WHERE store_id = $store_id";
     if( D('users')->execute($sql)){
     	M('account_log_store')->add($account_log);
         return true;
@@ -1186,35 +1188,36 @@ function order_settlement($order_id,$rec_id = 0)
 						
 			$settlement_rate = round($goods_amount/$order['goods_price'],4);//此商品占订单商品总价比例
 			
-			if($val['give_integral']>0){				
-				$settlement = $settlement - $val['goods_num']*$val['give_integral'] * $point_rate;//减去购买该商品赠送积分
-			}
-			
-			if($val['distribut']>0){
-				$settlement = $settlement - $val['distribut']*$val['goods_num'];//减去分销分成金额
-			}
-			
-			if($order['order_prom_amount']>0 || $order['coupon_price']>0){
-				$prom_and_coupon = $settlement_rate*($order['order_prom_amount']+$order['coupon_price']);//均摊优惠金额  = 此商品总价/订单商品总价*优惠总额 
-				$settlement = $settlement - $prom_and_coupon;//减去优惠券抵扣金额和优惠折扣
-			}
+//			if($val['give_integral']>0){
+//				$settlement = $settlement - $val['goods_num']*$val['give_integral'] * $point_rate;//减去购买该商品赠送积分
+//			}
+//
+//			if($val['distribut']>0){
+//				$settlement = $settlement - $val['distribut']*$val['goods_num'];//减去分销分成金额
+//			}
+//
+//			if($order['order_prom_amount']>0 || $order['coupon_price']>0){
+//				$prom_and_coupon = $settlement_rate*($order['order_prom_amount']+$order['coupon_price']);//均摊优惠金额  = 此商品总价/订单商品总价*优惠总额
+//				$settlement = $settlement - $prom_and_coupon;//减去优惠券抵扣金额和优惠折扣
+//			}
 		
-			$order_goods[$k]['goods_settlement'] = round($settlement,2) - round($settlement*$val['commission']/100,2);//每件商品该结算金额
+//			$order_goods[$k]['goods_settlement'] = round($settlement,2) - round($settlement*$val['commission']/100,2);//每件商品该结算金额
+            $order_goods[$k]['goods_settlement'] = round($settlement,2);//每件商品该结算金额
 			
-			$order_goods[$k]['settlement'] = round($settlement,2) - $order_goods[$k]['goods_settlement'];//平台抽成所得
+//			$order_goods[$k]['settlement'] = round($settlement,2) - $order_goods[$k]['goods_settlement'];//平台抽成所得
 
 			if($val['rec_id'] == $rec_id || $val['is_send'] == 3){
 				$val['refund_integral'] = intval($order['integral']*$settlement_rate);//使用积分抵扣金额均摊  == 此商品需要退还用户积分
-				$val['refund_settlement'] = $goods_amount - $prom_and_coupon - $val['refund_integral'] * $point_rate;//此商品实际需要退款金额
-				if($val['give_integral'] > 0){
-					$user_integral = M('users')->where(array('user_id'=>$order['user_id']))->getField('pay_points');//用户积分余额
-					if($user_integral < $val['give_integral']*$val['goods_num']){
-						$val['refund_settlement'] = $val['refund_settlement'] - $val['give_integral']*$val['goods_num']*$point_rate;//如果赠送积分被使用，那么从退款中扣除积分金额
-						$val['give_integral'] = 0; //赠送积分已经从退款中扣除
-					}else{
-						$val['give_integral'] = $val['give_integral']*$val['goods_num'];//需要追回的赠送积分
-					}
-				}
+				$val['refund_settlement'] = $goods_amount  - $val['refund_integral'] * $point_rate;//此商品实际需要退款金额
+//				if($val['give_integral'] > 0){
+//					$user_integral = M('users')->where(array('user_id'=>$order['user_id']))->getField('pay_points');//用户积分余额
+//					if($user_integral < $val['give_integral']*$val['goods_num']){
+//						$val['refund_settlement'] = $val['refund_settlement'] - $val['give_integral']*$val['goods_num']*$point_rate;//如果赠送积分被使用，那么从退款中扣除积分金额
+//						$val['give_integral'] = 0; //赠送积分已经从退款中扣除
+//					}else{
+//						$val['give_integral'] = $val['give_integral']*$val['goods_num'];//需要追回的赠送积分
+//					}
+//				}
 				$refund += $val['refund_settlement']; //已经退款商品金额
 				$refund_integral += $val['refund_integral'];//累计退还积分
 				if($rec_id>0){
@@ -1222,14 +1225,20 @@ function order_settlement($order_id,$rec_id = 0)
 				}			
 			}else{
 				$order['store_settlement'] += $order_goods[$k]['goods_settlement']; //订单所有商品结算所得金额之和
-				$order['settlement'] += $order_goods[$k]['settlement'];//平台抽成之和
-				$order['give_integral'] +=  $val['give_integral']*$val['goods_num'];//订单赠送积分
+//				$order['settlement'] += $order_goods[$k]['settlement'];//平台抽成之和
+//				$order['give_integral'] +=  $val['give_integral']*$val['goods_num'];//订单赠送积分
 				$order['distribut'] += $val['distribut']*$val['goods_num'];//订单分销分成
-				$order['integral'] = $order['integral'] - $refund_integral;//订单使用积分
+
 				$order['goods_amount'] += $goods_amount;//订单商品总价
 			}			
 		}
-		$order['store_settlement'] += $order['shipping_price'];//整个订单商家结算所得金额
+		$pt_integral=$order['goods_amount']*100/100;    //假如平台收取10%手续积分
+        $order['commis_totals']=$pt_integral;
+		$order['return_totals']=$refund;
+        $order['return_integral']=$refund_integral;
+        $order['integral'] = $order['integral'];//积分付款
+        $order['result_integral'] = $order['integral'] - $refund_integral-$pt_integral;//应该结算的积分 总的减去退款的减去平台手续费
+		$order['store_settlement'] = $order['order_amount']-$refund;//应该得到的金额减去退款的金额
 		//$order['store_settlement'] = round($order['store_settlement']*(1-0.006),2);//支付手续费
 	}
 	

@@ -267,12 +267,12 @@ class AdminController extends BaseController {
      */        
      public function login_task()
      {
-                
+
         // 多少天后自动分销记录自动分成                  
-         if(file_exists(APP_PATH.'Common/Logic/DistributLogic.class.php')){
-            $distributLogic = new \Common\Logic\DistributLogic();
-            $distributLogic->auto_confirm(STORE_ID); // 自动确认分成
-         }         
+//         if(file_exists(APP_PATH.'Common/Logic/DistributLogic.class.php')){
+//            $distributLogic = new \Common\Logic\DistributLogic();
+//            $distributLogic->auto_confirm(STORE_ID); // 自动确认分成
+//         }
          
         // 商家结算 
         $storeLogic = new StoreLogic();
