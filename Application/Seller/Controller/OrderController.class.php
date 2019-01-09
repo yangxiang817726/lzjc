@@ -64,7 +64,7 @@ class OrderController extends BaseController {
         I('order_sn') ? $condition['order_sn'] = trim(I('order_sn')) : false;
         I('order_status') != '' ? $condition['order_status'] = I('order_status') : false;
         I('pay_status') != '' ? $condition['pay_status'] = I('pay_status') : false;
-        I('pay_code') != '' ? $condition['pay_code'] = I('pay_code') : false;
+        I('pay_type') != '' ? $condition['pay_type'] = I('pay_type') : false;
         I('shipping_status') != '' ? $condition['shipping_status'] = I('shipping_status') : false;
         
         $sort_order = I('order_by','DESC').' '.I('sort');
@@ -110,9 +110,12 @@ class OrderController extends BaseController {
         $button = $orderLogic->getOrderButton($order);
         // 获取操作记录
         $action_log = M('order_action')->where(array('order_id'=>$order_id))->order('log_time desc')->select();
+        //获取配送信息
+        $peisong_info=M('order_sj')->where(array('order_id'=>$order_id))->find();
         $this->assign('order',$order);
         $this->assign('action_log',$action_log);
         $this->assign('orderGoods',$orderGoods);
+        $this->assign('peisong_info',$peisong_info);
         $split = count($orderGoods) >1 ? 1 : 0;
         foreach ($orderGoods as $val){
         	if($val['goods_num']>1){
@@ -863,5 +866,134 @@ class OrderController extends BaseController {
     public function ajaxOrderNotice(){
         $order_amount = M('order')->where(array('order_status'=>0))->count();
         echo $order_amount;
+    }
+    public function tuisong_sj(){
+        $order_id=I('order_id');
+        $order = M('order')->where("order_id=$order_id")->find();
+        $store_id=$order['store_id'];
+        $store_info = M('store')->where("store_id='$store_id'")->find();
+        $from_district= $store_info['district'];
+        $to_district=$order['district'];
+        //查询出所有在当前路线的司机信息
+//        var_dump($from_district);
+//        var_dump($to_district);die;
+
+        if(empty($order['pre_tstime'])){
+            $pre_tstime='未推送';
+        }else{
+            $pre_tstime=date('Y-m-d H:i:s',$order['pre_tstime']);
+        }
+        $map['district']=$from_district;
+        $map['district1']=$to_district;
+        $sj_list=M('users_sj')->where($map)->select();
+        $this->assign('order_id',$order_id);
+        $this->assign('sj_list',$sj_list);
+        $this->assign('pre_tstime',$pre_tstime);
+    	$this->display();
+    }
+    public  function ajax_tuisong(){
+        $db_prefix = C('DB_PREFIX');
+        $order_id=I('orderid');
+
+        $order = M('order')->where("order_id=$order_id")->find();
+        $store_id=$order['store_id'];
+        $store_info = M('store')->where("store_id='$store_id'")->find();
+        $from_district= $store_info['district'];
+        $to_district=$order['district'];
+        //查询出所有在当前路线的司机信息
+//        var_dump($from_district);
+//        var_dump($to_district);die;
+        $map['users_sj.district']=$from_district;
+        $map['users_sj.district1']=$to_district;
+
+        $sj_list = M('users_sj')->join("join {$db_prefix}users on {$db_prefix}users_sj.user_id = {$db_prefix}users.user_id and {$db_prefix}users_sj.district='{$from_district}' and {$db_prefix}users_sj.district1='{$to_district}'")->select();
+        if(empty($sj_list)){
+            exit(json_encode(array('status' => 0,'msg' => '没有当前线路的司机')));
+        }else{
+            foreach($sj_list as $key=>$val){
+                //这里进行微信消息推送
+            }
+            //修改订单表的上一次推送时间
+            M('order')->where("order_id=".$order_id)->save(array('pre_tstime'=>time()));
+        }
+
+        exit(json_encode(array('status' => 1,'msg' => '推送成功')));
+    }
+    public function accept_order(){          //司机接单接口
+        $order_id=I('orderid');
+        $sj_id= I('sj_id');
+        $order = M('order')->where("order_id=$order_id")->field('is_accept,store_district,district,is_peisong,store_id,order_id')->find();
+        $sj_info = M('users_sj')->where(array('id'=>$sj_id))->find();
+
+        if($order['district']!=$sj_info['district1']){
+            exit(json_encode(array('status' => -1,'msg' => '不在同一路线,不能接单')));
+        }
+        if($order['store_district']!=$sj_info['district']){
+            exit(json_encode(array('status' => -1,'msg' => '不在同一路线,不能接单')));
+        }
+//        if($order['is_peisong']==0){
+//            exit(json_encode(array('status' => -1,'msg' => '自提订单不能接单')));
+//        }
+        if($order['is_accept']==1){
+            exit(json_encode(array('status' => -1,'msg' => '该订单已经被抢单')));
+        }
+        $data['name']=$sj_info['name'];
+        $data['mobile']=$sj_info['mobile'];
+        $data['store_id']=$order['store_id'];
+        $data['sj_id']=$sj_info['id'];
+        $data['order_id']=$order['order_id'];
+        $data['start_district']=$sj_info['start_district'];
+        $data['end_district']=$sj_info['end_district'];
+        $data['accept_time']=time();
+
+
+        //入库
+        $res=M('order_sj')->add($data);
+        //修改订单标的是否接单字段
+        if($res){
+            M('order')->where(array('order_id'=>$order_id))->save(array('is_accept'=>1));    //修改成已经接单状态
+        }
+        exit(json_encode(array('status' => 1,'msg' => '接单成功')));
+
+    }
+    public function editps($order_id){      //修改配送信息或者自己安排司机配送
+
+       $sj_info=M('order_sj')->where(array('order_id'=>$order_id))->find();
+        if(IS_POST){
+            $order_sj_id= I('post.order_sj_id');
+            $order_id=I('post.order_id');
+            if(empty($order_sj_id)){
+                $data['name']=I('post.name');
+                $data['mobile']=I('post.mobile');
+//                $data['store_id']=$order['store_id'];
+//                $data['sj_id']=$sj_info['id'];
+                $data['order_id']=I('post.order_id');
+                $data['start_district']=I('post.start_district');
+                $data['end_district']=I('post.end_district');
+                $data['accept_time']=time();
+                $res=M('order_sj')->add($data);
+                if($res){
+                    M('order')->where(array('order_id'=>$order_id))->save(array('is_accept'=>1));    //修改成已经接单状态
+                }
+            }else{
+                $data['name']=I('post.name');
+                $data['mobile']=I('post.mobile');
+//                $data['store_id']=$order['store_id'];
+//                $data['sj_id']=$sj_info['id'];
+                $data['start_district']=I('post.start_district');
+                $data['end_district']=I('post.end_district');
+                $data['accept_time']=time();
+                $res=M('order_sj')->where(array('order_sj_id'=>$order_sj_id))->save($data);
+            }
+            if(!$res){
+                $this->success('没有更新数据',U('Order/editps',array('order_id'=>$order_id)));
+            }else{
+                $this->success('操作成功',U('Order/detail',array('order_id'=>$order_id)));
+            }
+            exit;
+        }
+        $this->assign('order_id',$order_id);
+        $this->assign('sj_info',$sj_info);
+        $this->display();
     }
 }

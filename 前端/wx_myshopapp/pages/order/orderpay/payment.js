@@ -8,7 +8,7 @@ Page({
 		var app = getApp();
 		var order = app.globalData.order;
 		var orderId = order.order_id;
-		this.setData({order:order});
+    this.setData({ order: order, orderId: orderId});
 		console.log('order id : ' + orderId);
 
     server.getJSON('/Cart/getWXPayData/user_id/' + 1 +"/order_id/" + orderId,function(res){
@@ -77,5 +77,28 @@ app.globalData.wxdata = res.data.result;
 			}, function (err) {
 				
 			});*/
-	}
+	},
+  	
+  xianxia_pay: function () {      //线下支付
+    var user_id = getApp().globalData.userInfo.user_id
+    var order_id = this.data.orderId
+    server.getJSON('/Cart/xianxia_pay/orderid/' + order_id + "/user_id/" + user_id, function (res) {
+      if (res.status == -1) {
+        wx.showToast({
+          title: '操作失败',
+          icon: 'success',
+          duration: 2000
+        })
+      } else {
+        wx.showToast({
+          title: '等待商家确认',
+          icon: 'success',
+          duration: 2000
+        })
+      }
+
+
+    })
+
+  }
 })

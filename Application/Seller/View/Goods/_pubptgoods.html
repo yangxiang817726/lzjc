@@ -210,30 +210,31 @@
                                       <span id="err_cat_id" style="color:#F00; display:none;"></span>                                 
                                     </td>
                                 </tr>                                                                
-                                <tr hidden>
-                                    <td>商品品牌:</td>
-                                    <td>
-									<select name="brand_id" id="brand_id" class="form-control" style="width:250px;">
-                                       		 <option value="0">选择品牌</option>
-                                            <foreach name="brandList" item="v" key="k" >
-                                                 <if condition="$v['status'] eq 0">
-                                                    <option value="{$v['id']}"  data-cat_id1="{$v['cat_id1']}" <if condition="$v['id'] eq $goodsInfo['brand_id'] ">selected="selected"</if>>
-                                                        {$v['name']}
-                                                    </option>
-                                               </if>
-                                           </foreach>
-                                      </select>                                    
-                                    </td>
-                                </tr>
-                                <tr hidden>
-                                    <td>供应商:</td>
+                                <!--<tr hidden>-->
+                                    <!--<td>商品品牌:</td>-->
+                                    <!--<td>-->
+									<!--<select name="brand_id" id="brand_id" class="form-control" style="width:250px;">-->
+                                       		 <!--<option value="0">选择品牌</option>-->
+                                            <!--<foreach name="brandList" item="v" key="k" >-->
+                                                 <!--<if condition="$v['status'] eq 0">-->
+                                                    <!--<option value="{$v['id']}"  data-cat_id1="{$v['cat_id1']}" <if condition="$v['id'] eq $goodsInfo['brand_id'] ">selected="selected"</if>>-->
+                                                        <!--{$v['name']}-->
+                                                    <!--</option>-->
+                                               <!--</if>-->
+                                           <!--</foreach>-->
+                                      <!--</select>                                    -->
+                                    <!--</td>-->
+                                <!--</tr>-->
+                                <tr >
+                                    <td>厂家:</td>
                                     <td>
                                         <select name="suppliers_id" id="suppliers_id" class="form-control" style="width:250px;">
-                                            <option value="0">不指定供应商属于本店商品</option>
-                                            <foreach name="suppliersList" item="v" key="k" >
-                                                <option value="{$v['suppliers_id']}"  <if condition="$v['suppliers_id'] eq $goodsInfo['suppliers_id'] ">selected="selected"</if>>
-                                                {$v['suppliers_name']}
+
+                                            <foreach name="factoryList" item="v" key="k" >
+                                                <option value="{$v['id']}"  <if condition="$v['id'] eq $goodsInfo['factory_id'] ">selected="selected"</if>>
+                                                {$v['name']}
                                                 </option>
+                                                <option value="0" <if condition="0 eq $goodsInfo['factory_id'] ">selected="selected"</if>>没有找到所属的厂家</option>
                                             </foreach>
                                         </select>
                                     </td>

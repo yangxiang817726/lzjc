@@ -192,20 +192,22 @@ class UserController extends BaseController {
             if(M('users_jg')->where("mobile='$mobile'")->count()>0){
                         exit(json_encode(array('status'=>1,'msg'=>'电话号码已存在','result'=>''))); 
             }
-
             /*$user_id = M('users')->where("email='$user_name' or mobile='$user_name'")->getField('user_id');
             if($user_id){
                 if(M('store')->where(array('user_id'=>$user_id))->count()>0){
                     $this->error("该会员已经申请开通过店铺");
                 }
             }*/
-            $user = array('mobile'=>$mobile,'status'=>1,
-                    'user_name'=>$mobile,'password'=>I('password'),
-                    'reg_time'=>time()
-            );
-
-            $user['password'] = encrypt($user['password']);
-            $user_id = M('users')->add($user);
+            // $user = array('mobile'=>$mobile,'status'=>1,
+            //         'user_name'=>$mobile,'password'=>I('password'),
+            //         'reg_time'=>time()
+            // );
+            $user_id = I('user_id');     
+                if(M('users_jg')->where("user_id='$user_id'")->find()){
+                        exit(json_encode(array('status'=>1,'msg'=>'你已经申请过了','result'=>''))); 
+            }
+            //$user['password'] = encrypt($user['password']);
+            //$user_id = M('users')->add($user);
             if($user_id){
                         $add['name'] =I('mobile');
                         $add['mobile'] =I('mobile');
@@ -236,7 +238,7 @@ class UserController extends BaseController {
         if($_POST){
             $mobile =  $_POST['mobile'];
             if(M('users_sj')->where("mobile='$mobile'")->count()>0){
-                        exit(json_encode(array('status'=>1,'msg'=>'电话号码已存在','result'=>''))); 
+                        exit(json_encode(array('status'=>-1,'msg'=>'电话号码已存在','result'=>''))); 
             }
 
             /*$user_id = M('users')->where("email='$user_name' or mobile='$user_name'")->getField('user_id');
@@ -245,13 +247,16 @@ class UserController extends BaseController {
                     $this->error("该会员已经申请开通过店铺");
                 }
             }*/
-            $user = array('mobile'=>$mobile,'status'=>1,
-                    'user_name'=>$mobile,'password'=>I('password'),
-                    'reg_time'=>time()
-            );
-
-            $user['password'] = encrypt($user['password']);
-            $user_id = M('users')->add($user);
+            // $user = array('mobile'=>$mobile,'status'=>1,
+            //         'user_name'=>$mobile,'password'=>I('password'),
+            //         'reg_time'=>time()
+            // );
+            $user_id = I('user_id');     
+                if(M('users_sj')->where("user_id='$user_id'")->find()){
+                        exit(json_encode(array('status'=>1,'msg'=>'你已经申请过了','result'=>''))); 
+            }
+            // $user['password'] = encrypt($user['password']);
+            // $user_id = M('users')->add($user);
             if($user_id){
                         $add['name'] =I('mobile');
                         $add['mobile'] =I('mobile');
@@ -271,7 +276,7 @@ class UserController extends BaseController {
                         exit(json_encode(array('status'=>1,'msg'=>'提交成功','result'=>''))); 
 
                 }else{
-                        exit(json_encode(array('status'=>1,'msg'=>'网络错误','result'=>''))); 
+                        exit(json_encode(array('status'=>-1,'msg'=>'网络错误','result'=>''))); 
 
                 }
         }
@@ -781,13 +786,14 @@ class UserController extends BaseController {
     
     public function register()
     {
-    	$data['city'] = $_GET['city'];
-    	$data['country'] = $_GET['country'];
-    	$data['gender'] = $_GET['gender'];
-    	$data['open_id'] = $_GET['open_id'];
-    	$data['nick_name'] = $_GET['nick_name'];
-    	$data['province'] = $_GET['province'];
-    	$data['head_pic'] = $_GET['head_pic'];
+        $data  = json_decode($_GET['info'],true);
+    	// $data['city'] = $_GET['city'];
+    	// $data['country'] = $_GET['country'];
+    	// $data['gender'] = $_GET['gender'];
+    	// $data['open_id'] = $_GET['open_id'];
+    	// $data['nick_name'] = $_GET['nick_name'];
+    	// $data['province'] = $_GET['province'];
+    	// $data['head_pic'] = $_GET['head_pic'];
     	$data['reg_time'] = time();
         $_GET['first_leader']=1289;        //形成分销关系, 这里先写一个死值，后期根据时间推荐者ID来
         if($_GET['first_leader'])
@@ -803,28 +809,32 @@ class UserController extends BaseController {
         {
             $data['first_leader'] = 0;
         }
-
-    	$id = M('users')->add($data);
-    	$res = M('users')->where(array("user_id"=>$id))->find();
-    
-    	$this->test($data['head_pic'],$id);
-//    	$res = M('users')->where(array("user_id"=>$id))->find();
-//    	$res['head_pic'] = SITE_URL.$res['head_pic'];
-    	$res = M('users')->where(array("user_id"=>$id))->find();
-    	if($res)
-    	{
-    		$tp_config = M('config')->where(array("name"=>'hot_keywords'))->find();
-    
-    		if($tp_config['name'] == 'hot_keywords')
-    			$res['hot_keywords'] = explode('|', $tp_config['value']);
-    
-    			$res['apply'] = D('seller_apply')->where(array("user_id"=>$res['user_id']))->find();
-    			
-    
-    			echo json_encode(array("code"=>'200','msg'=>'注册成功','res'=>$res));
-    	}
-    	else
-    		echo json_encode(array("code"=>'400','msg'=>'失败'));
+        $is_res = M('users')->where(array("open_id"=>$data['open_id']))->find();
+        if ($is_res) {//已注册，无需注册
+                echo json_encode(array("code"=>'200','msg'=>'登录成功','res'=>$is_res));
+            }else{
+            $id = M('users')->add($data);
+            $res = M('users')->where(array("user_id"=>$id))->find();
+            $this->test($data['head_pic'],$id);
+            $res = M('users')->where(array("user_id"=>$id))->find();
+            $res['head_pic'] = SITE_URL.$res['head_pic'];
+            $res = M('users')->where(array("user_id"=>$id))->find();
+            if($res)
+            {
+                $tp_config = M('config')->where(array("name"=>'hot_keywords'))->find();
+        
+                if($tp_config['name'] == 'hot_keywords')
+                    $res['hot_keywords'] = explode('|', $tp_config['value']);
+        
+                    $res['apply'] = D('seller_apply')->where(array("user_id"=>$res['user_id']))->find();
+                    
+        
+                    echo json_encode(array("code"=>'200','msg'=>'注册成功','res'=>$res));
+            }
+            else
+                echo json_encode(array("code"=>'400','msg'=>'失败'));
+            }
+    	
     
     }
     

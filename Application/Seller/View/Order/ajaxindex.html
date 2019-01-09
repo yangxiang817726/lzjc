@@ -18,6 +18,9 @@
                                         <a href="">应付金额</a>
                                     </td>
                                     <td class="text-center">
+                                        <a href="">应付积分</a>
+                                    </td>
+                                    <td class="text-center">
                                         <a href="javascript:sort('order_status');">订单状态</a>
                                     </td>
                                     <td class="text-center">支付状态</td>
@@ -39,13 +42,14 @@
                                         </td>
                                         <td class="text-center">{$list.order_sn}</td>
                                         <td class="text-center">{$list.consignee}:{$list.mobile}</td>
-                                        <td class="text-center">{$list.total_price}</td>
+                                        <td class="text-center">{$list.total_amount}</td>
                                         <td class="text-center">{$list.order_amount}</td>
-                                        <td class="text-center">{$order_status[$list[order_status]]}<if condition="$list['is_cod'] eq '1'"><span style="color: red">(货到付款)</span></if></td>
+                                        <td class="text-center">{$list.integral}</td>
+                                        <td class="text-center">{$order_status[$list[order_status]]}<if condition="$list['pay_type'] eq '2' && $list[order_status] eq '0'"><span style="color: red">(线下付款,待确认)</span></if><if condition="$list['pay_type'] eq '2' && $list[order_status] neq '0'"><span style="color: red">(线下付款)</span></if></td>
                                         <td class="text-center">{$pay_status[$list[pay_status]]}</td>
                                         <td class="text-center">{$shipping_status[$list[shipping_status]]}</td>
                                         <td class="text-center">微信支付</td>
-                                        <td class="text-center">{$list.shipping_name}</td>
+                                        <td class="text-center"><if condition="$list['is_peisong'] eq '0'"><span style="color: red">(自提)</span><else/><span style="color: red">(安排配送)</span></if></td>
                                         <td class="text-center">{$list.add_time|date='Y-m-d H:i',###}</td>
                                         <td class="text-center">
                                            <a href="{:U('order/detail',array('order_id'=>$list['order_id']))}" data-toggle="tooltip" title="" class="btn btn-info" data-original-title="查看详情"><i class="fa fa-eye"></i></a>

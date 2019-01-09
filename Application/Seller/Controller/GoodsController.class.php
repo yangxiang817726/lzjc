@@ -201,7 +201,7 @@ class GoodsController extends BaseController {
                     $_POST['extend_cat_id_3'] && ($Goods->extend_cat_id = I('extend_cat_id_3'));
                     $Goods->shipping_area_ids = implode(',',$_POST['shipping_area_ids']);
                     $Goods->shipping_area_ids = $Goods->shipping_area_ids ? $Goods->shipping_area_ids : '';
-                    
+
                     $type_id = M('goods_category')->where("id = $cat_id2")->getField('type_id'); // 找到这个分类对应的type_id
                     $store_goods_examine = M('store')->where(array('store_id'=>STORE_ID))->Field('goods_examine,is_own_shop')->find();
 
@@ -224,7 +224,8 @@ class GoodsController extends BaseController {
                                     'market_price'=>$_POST['market_price'], //市场价
                                     'goods_price'=>$_POST['shop_price'], // 本店价
                                     'member_goods_price'=>$_POST['shop_price'], // 会员折扣价                        
-                                    ));                            
+                                    ));
+
                     	$res=	$Goods->save(); // 编辑数据到数据库
                            if($res==1){
                                if($store_goods_examine['goods_examine']){
@@ -255,7 +256,7 @@ class GoodsController extends BaseController {
                     $return_arr = array(
                         'status' => 1,
                         'msg'   => '操作成功',                        
-                        'data'  => array('url'=>U('Goods/goodsList')),
+                        'data'  => array('url'=>U('Goods/goodsList/',array('goods_state'=>1))),
                     );
                    //重定向, 调整之前URL是设置参数获取方式 
                    session("is_back" , 1);
@@ -276,7 +277,8 @@ class GoodsController extends BaseController {
             $store_goods_class_list = M('store_goods_class')->where("parent_id = 0 and store_id = ".STORE_ID)->select(); //店铺内部分类                      
             $brandList = $GoodsLogic->getSortBrands();
             $goodsType = M("GoodsType")->select();
-            $suppliersList = M("suppliers")->select();
+            $factoryList = M("factory")->select();
+
             $plugin_shipping = M('plugin')->where(array('type'=>array('eq','shipping')))->select();//插件物流
             $shipping_area = D('shipping_area')->getShippingArea(STORE_ID);//配送区域
 
@@ -290,7 +292,7 @@ class GoodsController extends BaseController {
             $this->assign('store_goods_class_list',$store_goods_class_list);
             $this->assign('brandList',$brandList);
             $this->assign('goodsType',$goodsType);
-            $this->assign('suppliersList',$suppliersList);
+            $this->assign('factoryList',$factoryList);
             $this->assign('goodsInfo',$goodsInfo);  // 商品详情            
             $goodsImages = M("GoodsImages")->where('goods_id ='.I('GET.goods_id',0))->select();
             $this->assign('goodsImages',$goodsImages);  // 商品相册

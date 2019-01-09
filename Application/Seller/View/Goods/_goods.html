@@ -225,15 +225,16 @@
                                       </select>                                    
                                     </td>
                                 </tr>
-                                <tr hidden>
-                                    <td>供应商:</td>
+                                <tr >
+                                    <td>厂家:</td>
                                     <td>
-                                        <select name="suppliers_id" id="suppliers_id" class="form-control" style="width:250px;">
-                                            <option value="0">不指定供应商属于本店商品</option>
-                                            <foreach name="suppliersList" item="v" key="k" >
-                                                <option value="{$v['suppliers_id']}"  <if condition="$v['suppliers_id'] eq $goodsInfo['suppliers_id'] ">selected="selected"</if>>
-                                                {$v['suppliers_name']}
+                                        <select name="factory_id" id="factory_id" class="form-control" style="width:250px;">
+
+                                            <foreach name="factoryList" item="v" key="k" >
+                                                <option value="{$v['id']}"  <if condition="$v['id'] eq $goodsInfo['factory_id'] ">selected="selected"</if>>
+                                                {$v['name']}
                                                 </option>
+                                                <option value="0" <if condition="0 eq $goodsInfo['factory_id'] ">selected="selected"</if>>没有找到所属的厂家</option>
                                             </foreach>
                                         </select>
                                     </td>
@@ -259,13 +260,13 @@
                                         <span id="err_cost_price" style="color:#F00; display:none"></span>					                                        
                                     </td>
                                 </tr>       
-                                <tr>
-                                    <td>佣金:</td>
-                                    <td>
-                                        <input type="text" value="{$goodsInfo.distribut}" name="distribut" class="form-control" style="width:150px;" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onpaste="this.value=this.value.replace(/[^\d.]/g,'')" />
-                                        	用于分销的分成金额
-                                    </td>
-                                </tr>                                  
+                                <!--<tr>-->
+                                    <!--<td>佣金:</td>-->
+                                    <!--<td>-->
+                                        <!--<input type="text" value="{$goodsInfo.distribut}" name="distribut" class="form-control" style="width:150px;" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onpaste="this.value=this.value.replace(/[^\d.]/g,'')" />-->
+                                        	<!--用于分销的分成金额-->
+                                    <!--</td>-->
+                                <!--</tr>                                  -->
                                 <tr>
                                     <td>上传商品图片:</td>
                                     <td>
@@ -291,10 +292,10 @@
                                 <tr>
                                     <td>是否包邮:</td>
                                     <td>
-                                        是:<input type="radio" <if condition="$goodsInfo[is_free_shipping] eq 1">checked="checked"</if> value="1" name="is_free_shipping" /> 
-                                        否:<input type="radio" <if condition="$goodsInfo[is_free_shipping] eq 0">checked="checked"</if> value="0" name="is_free_shipping" /> 
+                                        是:<input type="radio" checked="checked" value="1" name="is_free_shipping" />
+                                        <!--否:<input type="radio" <if condition="$goodsInfo[is_free_shipping] eq 0">checked="checked"</if> value="0" name="is_free_shipping" /> -->
                                     </td>
-                                </tr>                                
+                                </tr>
                                 <tr>
                                     <td>库存数量:</td>
                                     <td>

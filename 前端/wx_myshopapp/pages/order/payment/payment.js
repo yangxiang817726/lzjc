@@ -11,7 +11,8 @@ Page({
 		console.log('order id : ' + orderId);
 		this.setData({
 			order: order,
-			wxdata:wxdata
+			wxdata:wxdata,
+      orderId:orderId
 		})
 	},
 	pay: function () {
@@ -53,5 +54,27 @@ Page({
 			 })
 
 			
-	}
+	},
+  	xianxia_pay: function () {      //线下支付
+     var user_id = getApp().globalData.userInfo.user_id
+     var order_id = this.data.orderId
+     server.getJSON('/Cart/xianxia_pay/master_order_sn/' + order_id + "/user_id/" + user_id, function (res) {
+        if(res.status==-1){
+          wx.showToast({
+            title: res.msg,
+            icon: 'success',
+            duration: 2000
+          })
+        }else{
+          wx.showToast({
+            title: res.msg,
+            icon: 'success',
+            duration: 2000
+          })
+        }
+       
+
+      })
+      
+  }
 })

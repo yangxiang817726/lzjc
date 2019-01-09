@@ -78,7 +78,6 @@ class UserController extends BaseController {
     public function detail(){
         $uid = I('get.id');
         $user = D('users')->where(array('user_id'=>$uid))->find();
-
         if(!$user)
             exit($this->error('会员不存在'));
         if(IS_POST){

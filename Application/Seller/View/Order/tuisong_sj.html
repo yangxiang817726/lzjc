@@ -1,0 +1,97 @@
+<include file="Public/min-header"/>
+<div class="wrapper">
+  <include file="Public/breadcrumb"/>
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><i class="fa fa-list"></i>司机列表</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="navbar navbar-default">
+
+
+
+                                <button type="button" onclick="ajax_tuisong({$order_id})" id="button-filter search-order" class="btn btn-primary "> 推送给当前线路的司机</button>
+                                 上次推送时间:{$pre_tstime}
+
+                    </div>
+                    <div id="ajax_return">
+
+                        <form method="post" enctype="multipart/form-data" target="_blank" id="form-order">
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-hover">
+                                    <thead>
+                                    <tr>
+                                        </td>
+                                        <td class="text-center">
+                                            <a href="javascript:sort_list('order_sn');">姓名</a>
+                                        </td>
+                                        <td class="text-center">
+                                            <a href="javascript:void(0);">联系电话</a>
+                                        </td>
+                                        <td class="text-center">
+                                            <a href="javascript:void(0);">起</a>
+                                        </td>
+                                        <td class="text-center">
+                                            <a href="javascript:void(0);">终</a>
+                                        </td>
+
+
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <volist name="sj_list" id="items">
+                                        <tr>
+
+                                            <td class="text-center">{$items.name}</td>
+                                            <td class="text-center">{$items.mobile}</td>
+                                            <td class="text-center">{$items.start_district}</td>
+                                            <td class="text-center">{$items.end_district}</td>
+                                        </tr>
+                                    </volist>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </form>
+                        <div class="row">
+                            <div class="col-sm-6 text-left"></div>
+                            <div class="col-sm-6 text-right">{$page}</div>
+                        </div>
+                        <script>
+                            $(".pagination  a").click(function(){
+                                var page = $(this).data('p');
+                                ajax_get_table('search-form2',page);
+                            });
+                        </script>
+                    </div>
+ 
+                </div>
+            </div>
+        </div>        <!-- /.row -->
+    </section>
+    <!-- /.content -->
+</div>
+<!-- /.content-wrapper -->
+<script>
+function ajax_tuisong(orderid){
+    var order_id=orderid
+    $.ajax({
+        type : "POST",
+        url:"/index.php/Seller/order/ajax_tuisong",//+tab,
+        data : {orderid:order_id},// 订单  ID
+        success: function(data){
+            var data= eval('(' + data + ')');
+
+           if(data.status==1){
+               alert('推送成功');
+           }else{
+               alert(data.msg);
+           }
+        }
+    });
+}
+</script>
+</body>
+</html>

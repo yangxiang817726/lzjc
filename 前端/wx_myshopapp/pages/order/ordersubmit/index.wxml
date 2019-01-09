@@ -65,49 +65,36 @@
 
 <view class="class-line1"></view>
 
-<view class="view-freemoney">
-<!--
-<text class="text-hint">优   惠   劵:</text>
-
-<input bindchange="bindChange" placeholder-style="color:#999999" class="input-money" placeholder="输入余额"/>
--->
-
-<radio bindtap="check1" color="red" class="radio-style" value="0" checked="{{check[0]}}"/> 
-
-<picker  bindchange="bindPickerChange" value="{{index}}" range="{{coupon}}">
-   <view class="view-picker">
-    
-      {{cv}}
-    
-   </view>
-  </picker>
 
 
 
-<text class="text-hint">或者</text>
-
-<radio bindtap="check2" color="red" class="radio-style" value="1" checked="{{check[1]}}"/> 
-<input bindchange="bindChangeOfcoupon" placeholder-style="color:#999999" class="input-money" placeholder="直接输入优惠劵" style="width:200rpx"/>
-
-</view>
-
-
-<view class="view-freemoney">
+<!-- <view class="view-freemoney">
 <text class="text-hint">使用余额:</text>
 
 <input bindchange="bindChange" placeholder-style="color:#999999" class="input-money" placeholder="输入余额"/>
 <text bindtap="use" class="btn-use">使用</text>
 <text class="text-hint1">您的可用余额{{freemoney}}</text>
-</view>
+</view> -->
 
 <view class="view-freemoney">
 <text class="text-hint">使用积分:</text>
 
 <input bindchange="bindChangeOfPoint" placeholder-style="color:#999999" class="input-money" placeholder="输入积分"/>
 <text bindtap="use_point" class="btn-use">使用</text>
-<text class="text-hint1">您的可用积分{{pay_points}}</text>
+<text class="text-hint1">总积分{{pay_points}},最多可用{{maxusepoint}}</text>
 </view>
+<view class="view-freemoney">
+<text class="text-hint">是否需要配送:</text>
 
+<radio-group class="radio-group" bindchange="radioChange">
+  <label class="radio">
+    <radio value="0" checked="true" />
+    否
+     <radio value="1" checked="" />
+    是
+  </label>
+</radio-group>
+</view>
 <view class="class-line1"></view>
 
 

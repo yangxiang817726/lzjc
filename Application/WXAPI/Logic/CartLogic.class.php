@@ -301,7 +301,7 @@ function cart_freight2($shipping_code,$province,$city,$district,$weight)
      * @param type $car_price 各种价格
      * @return type $order_id 返回新增的订单id
      */
-public function addOrder($user_id,$address_id,$shipping_code,$invoice_title,$coupon_id = array(),$car_price,$user_note)
+public function addOrder($user_id,$address_id,$shipping_code,$invoice_title,$coupon_id = array(),$car_price,$user_note,$is_peisong)
     {         
         // 仿制灌水 1天只能下 50 单  // select * from `tp_order` where user_id = 1  and order_sn like '20151217%' 
         $order_count = M('Order')->where("user_id= $user_id and order_sn like '".date('Ymd')."%'")->count(); // 查找购物车商品总数量
@@ -350,7 +350,10 @@ public function addOrder($user_id,$address_id,$shipping_code,$invoice_title,$cou
                         'order_prom_id'    =>$car_price['store_order_prom_id'][$k],//'订单优惠活动id',
                         'order_prom_amount'=>$car_price['store_order_prom_amount'][$k],//'订单优惠活动优惠了多少钱',
                         'store_id'         =>$k,  // 店铺id
+                        'is_peisong'         =>$is_peisong,  // 是否需要安排配送
+
                 );
+                $data['is_own_shop']         =     M('store')->where("store_id = '{$k}'")->getField('is_own_shop') ;       //是否是自营订单1自营0门店
                 $order_id = M("Order")->data($data)->add();               
                 // 记录订单操作日志
                 logOrder($order_id,'您提交了订单，请等待系统确认','提交订单',$user_id,2);              
@@ -376,8 +379,9 @@ public function addOrder($user_id,$address_id,$shipping_code,$invoice_title,$cou
                    $data2['prom_type']          = $val['prom_type']; // 0 普通订单,1 限时抢购, 2 团购 , 3 促销优惠
                    $data2['prom_id']            = $val['prom_id']; // 活动id
                    $data2['store_id']           = $val['store_id']; // 店铺id
-                   $data2['distribut']          = $goods['distribut']; // 三级分销金额
-                   $data2['commission']         = M('goods_category')->where("id = {$goods['cat_id3']}")->getField('commission'); // 商品抽成比例
+                    $data2['factory_id']          = M('goods')->where("goods_id = {$val['goods_id']}")->getField('factory_id');
+////                   $data2['distribut']          = $goods['distribut']; // 三级分销金额
+//                   $data2['commission']         = M('goods_category')->where("id = {$goods['cat_id3']}")->getField('commission'); // 商品抽成比例
                    $order_goods_id              = M("OrderGoods")->data($data2)->add(); 
                    // 扣除商品库存  扣除库存移到 付完款后扣除
                    //M('Goods')->where("goods_id = ".$val['goods_id'])->setDec('store_count',$val['goods_num']); // 商品减少库存
@@ -501,4 +505,5 @@ public function addOrder($user_id,$address_id,$shipping_code,$invoice_title,$cou
    	}
    	return $order_sn;
    }
+
 }

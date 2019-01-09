@@ -8,9 +8,9 @@
            <nav class="navbar navbar-default">	     
 			<div class="collapse navbar-collapse">
                 <div class="navbar-form pull-right margin">
-                      <if condition="$order['order_status'] lt 2">
-                         <a href="{:U('order/edit_order',array('order_id'=>$order['order_id']))}" data-toggle="tooltip" title="" class="btn btn-primary" data-original-title="编辑">修改订单</a>
-                      </if>
+                      <!--<if condition="$order['order_status'] lt 2">-->
+                         <!--<a href="{:U('order/edit_order',array('order_id'=>$order['order_id']))}" data-toggle="tooltip" title="" class="btn btn-primary" data-original-title="编辑">修改订单</a>-->
+                      <!--</if>-->
                       <if condition="($split eq 1) and ($order['order_status'] lt 2)">
                          <a href="{:U('order/split_order',array('order_id'=>$order['order_id']))}" data-toggle="tooltip" title="" class="btn btn-primary" data-original-title="编辑">拆分订单</a>
                       </if>
@@ -34,7 +34,7 @@
                         <td>订单 ID:</td>
                         <td>订单号:</td>
                         <td>会员:</td>
-                        <td>E-Mail:</td>
+                        <!--<td>E-Mail:</td>-->
                         <td>电话:</td>
                         <td>应付:</td>
                         <td>订单 状态:</td>
@@ -46,7 +46,7 @@
                         <td>{$order.order_id}</td>
                         <td>{$order.order_sn}</td>
                         <td><a href="#" target="_blank">{$order.consignee}</a></td>
-                        <td><a href="#">{$order.email}</a></td>
+                        <!--<td><a href="#">{$order.email}</a></td>-->
                         <td>{$order.mobile}</td>
                         <td>{$order.order_amount}</td>
                         <td id="order-status">{$order_status[$order[order_status]]} / {$pay_status[$order[pay_status]]}<if condition="$order['pay_code'] eq 'cod'"><span style="color: red">(货到付款)</span></if> / {$shipping_status[$order[shipping_status]]}</td>
@@ -58,7 +58,8 @@
                          </if>
                         </td>             
                         <td id="pay-type">
-                            {$order.pay_name|default='其他方式'}
+                            <if condition="$order.pay_type eq 1">微信支付</if>
+                            <if condition="$order.pay_type eq 2">线下支付</if>
                         </td>
                     </tr>
 
@@ -77,7 +78,7 @@
 					<td>收货人:</td>
 					<td>联系方式:</td>
 					<td>地址:</td>
-					<td>邮编:</td>
+					<!--<td>邮编:</td>-->
 					<td>配送方式:</td>
 			 
                     </tr>
@@ -85,20 +86,26 @@
                         <td>{$order.consignee}</td>
                         <td>{$order.mobile}</td>
                         <td>{$order.address2}</td>
+                        <!--<td>-->
+                            <!--<if condition="$order.zipcode neq ''">-->
+                                <!--{$order.zipcode}-->
+                                <!--<else/>-->
+                                <!--N-->
+                            <!--</if>-->
+                        <!--</td>-->
+                        <!--<td>-->
+                            <!--{$order.shipping_name}-->
+                            <!--<if condition="$order[shipping_status] eq 1">-->
+                                <!--<a href="{:U('Order/shipping_print',array('order_id'=>$order['order_id'],'code'=>$order['shipping_code']))}" target="_blank" class="btn btn-primary input-sm" onclick="">打印快递单</a>-->
+                            <!--</if>-->
+                        <!--</td>-->
                         <td>
-                            <if condition="$order.zipcode neq ''">
-                                {$order.zipcode}
+                            <if condition="$order.is_peisong eq 1">
+                                安排配送
                                 <else/>
-                                N
+                                自提
                             </if>
                         </td>
-                        <td>
-                            {$order.shipping_name}
-                            <if condition="$order[shipping_status] eq 1">
-                                <a href="{:U('Order/shipping_print',array('order_id'=>$order['order_id'],'code'=>$order['shipping_code']))}" target="_blank" class="btn btn-primary input-sm" onclick="">打印快递单</a>
-                            </if>
-                        </td>
-                      
                     </tr>
                     </tbody>
                 </table>
@@ -114,10 +121,10 @@
                     <thead>
                     <tr>
                         <td class="text-left">商品</td>
-                        <td class="text-left">属性</td>
+                        <td class="text-left">规格</td>
                         <td class="text-right">数量</td>
                         <td class="text-right">单品价格</td>
-                        <td class="text-right">会员折扣价</td>
+                        <!--<td class="text-right">会员折扣价</td>-->
                         <td class="text-right">单品小计</td>
                     </tr>
                     </thead>
@@ -126,10 +133,10 @@
                         <tr>
                             <td class="text-left"><a href="{:U('Home/Goods/goodsInfo',array('id'=>$good['goods_id']))}" target="_blank">{$good.goods_name}</a>
                             </td>
-                            <td class="text-left">{$good.goods_attr}</td>
+                            <td class="text-left">{$good.spec_key_name}</td>
                             <td class="text-right">{$good.goods_num}</td>
                             <td class="text-right">{$good.goods_price}</td>
-                            <td class="text-right">{$good.member_goods_price}</td>
+                            <!--<td class="text-right">{$good.member_goods_price}</td>-->
                             <td class="text-right">{$good.goods_total}</td>
                         </tr>
                     </volist>
@@ -147,8 +154,8 @@
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h3 class="panel-title text-center">费用信息
-                    <a class="btn btn-primary btn-xs" data-original-title="修改费用" title="" data-toggle="tooltip" href="{:U('Order/editprice',array('order_id'=>$order['order_id']))}">
-                    <i class="fa fa-pencil"></i>
+                    <!--<a class="btn btn-primary btn-xs" data-original-title="修改费用" title="" data-toggle="tooltip" href="{:U('Order/editprice',array('order_id'=>$order['order_id']))}">-->
+                    <!--<i class="fa fa-pencil"></i>-->
                 </a></h3>
             </div>
             <div class="panel-body">
@@ -158,18 +165,18 @@
                         <td class="text-right">小计:</td>
                         <td class="text-right">运费:</td>
                         <td class="text-right">积分 (-{$order.integral}):</td>
-                        <td class="text-right">余额抵扣</td>
-                        <td class="text-right">优惠券抵扣</td>
-                        <td class="text-right">价格调整:</td>
+                        <!--<td class="text-right">余额抵扣</td>-->
+                        <!--<td class="text-right">优惠券抵扣</td>-->
+                        <!--<td class="text-right">价格调整:</td>-->
                         <td class="text-right">应付:</td>
                     </tr>
                     <tr>
                         <td class="text-right">{$order.goods_price}</td>
                         <td class="text-right">+{$order.shipping_price}</td>
                         <td class="text-right">-{$order.integral_money}</td>
-                        <td class="text-right">-{$order.user_money}</td>
-                        <td class="text-right">-{$order.coupon_price}</td>
-                        <td class="text-right">减:{$order.discount}</td>
+                        <!--<td class="text-right">-{$order.user_money}</td>-->
+                        <!--<td class="text-right">-{$order.coupon_price}</td>-->
+                        <!--<td class="text-right">减:{$order.discount}</td>-->
                         <td class="text-right">{$order.order_amount}</td>
                     </tr>
                     </tbody>
@@ -177,6 +184,52 @@
 
             </div>
         </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title text-center">配送信息
+                        <if condition="$order.is_peisong eq 1">
+                        <a class="btn btn-primary btn-xs" data-original-title="推送消息给司机" title="" data-toggle="tooltip" href="{:U('Order/editps',array('order_id'=>$order['order_id']))}">
+                        <i class="fa fa-pencil"></i></a>
+                            <if condition="$order.is_accept eq 0"><a class="btn btn-primary margin" href="{:U('Order/tuisong_sj',array('order_id'=>$order['order_id']))}">推送</a></if></if>
+                        </h3>
+                </div>
+                <div class="panel-body">
+                    <if condition="!empty($peisong_info)">
+                    <table class="table table-bordered">
+                        <tbody>
+                        <tr>
+                            <td class="text-right">姓名:</td>
+                            <td class="text-right">联系电话:</td>
+                            <td class="text-right">起点:</td>
+                            <td class="text-right">终点:</td>
+                            <td class="text-right">时间:</td>
+                            <!--<td class="text-right">余额抵扣</td>-->
+                            <!--<td class="text-right">优惠券抵扣</td>-->
+                            <!--<td class="text-right">价格调整:</td>-->
+                            <!--<td class="text-right">状态</td>-->
+                        </tr>
+                        <tr>
+                            <td class="text-right">{$peisong_info.name}</td>
+                            <td class="text-right">{$peisong_info.mobile}</td>
+                            <td class="text-right">{$peisong_info.start_district}</td>
+                            <td class="text-right">{$peisong_info.end_district}</td>
+                            <td class="text-right">{$peisong_info.accept_time|date='Y-m-d H:i:s',###}</td>
+                            <!--<td class="text-right">-{$order.user_money}</td>-->
+                            <!--<td class="text-right">-{$order.coupon_price}</td>-->
+                            <!--<td class="text-right">减:{$order.discount}</td>-->
+                            <!--<td class="text-right">已经抢单</td>-->
+                        </tr>
+                        </tbody>
+                    </table>
+                    <else/>
+                        <if condition="$order.is_peisong eq 1">
+                            <div style="margin:auto;color:red;    text-align: center;">还未安排配送</div>
+                            <else/>
+                            <div style="margin:auto;color:red;    text-align: center;">客户自提</div>
+                        </if>
+                    </if>
+                </div>
+            </div>
         <!--新订单列表 操作信息-->
         <div class="panel panel-default">
             <div class="panel-heading">

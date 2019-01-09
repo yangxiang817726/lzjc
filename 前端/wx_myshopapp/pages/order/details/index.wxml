@@ -23,7 +23,8 @@
 
 <image src="/images/payicon.png"></image>
 <view class="view-addressleft-info">
-<text class="text-name">所选支付方式 : 微信支付</text>
+<text wx:if="{{result.pay_type == 1}}" class="text-name">所选支付方式 : 微信支付</text>
+<text wx:if="{{result.pay_type == 2}}" class="text-name">所选支付方式 : 线下付款</text>
 <text class="text-address">应付款金额 : ￥{{result.order_amount}}元</text>
 </view>
 </view>

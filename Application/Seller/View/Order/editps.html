@@ -1,0 +1,73 @@
+<include file="Public/min-header"/>
+<div class="wrapper">
+  <include file="Public/breadcrumb"/>
+    <section class="content">
+    <!-- Main content -->
+    <div class="container-fluid">
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title"><i class="fa fa-list"></i> 配送信息修改</h3>
+            </div>
+            <div class="panel-body">
+                <form action="{:U('Order/editps',array('order_id'=>$order['order_id']))}" method="post" id="edit_price">
+                    <table class="table table-bordered">
+                    <tbody>
+                    <tr>
+                        <div class="row">
+                            <td class="text-right col-sm-2">司机姓名：</td>
+                            <td colspan="3">
+                                <input type="text" name="name" class="input-sm" value="{$sj_info.name}">
+                            </td>
+                        </div>
+                    </tr>
+                        <tr>
+                            <div class="row">
+                                <td class="text-right col-sm-2">联系方式：</td>
+                                <td colspan="3">
+                                    <input type="text" name="mobile" class="input-sm" value="{$sj_info.mobile}">
+                                </td>
+                            </div>
+                        </tr>
+                        <tr>
+                            <div class="row">
+                                <td class="text-right col-sm-2">起点：</td>
+                                <td colspan="3">
+                                    <input type="text" name="start_district" class="input-sm" value="{$sj_info.start_district}">
+
+                                </td>
+                            </div>
+                        </tr>
+                        <tr>
+                            <div class="row">
+                                <td class="text-right col-sm-2">到达点：</td>
+                                <td colspan="3">
+
+                                <input type="text" name="end_district" class="input-sm" value="{$sj_info.end_district}">
+
+                                </td>
+
+
+                            </div>
+                        </tr>
+                         <input type="hidden" name="order_sj_id" value="{$sj_info['order_sj_id']}">
+                    <input type="hidden" name="order_id" value="{$order_id}">
+                        <tr>
+                            <div class="row">
+                                <td class="text-right col-sm-2"></td>
+                                <td colspan="3">
+                                    <button class="btn btn-default" type="button" onclick="javascript:history.go(-1)">取消</button>
+                                    <button class="btn btn-primary" type="submit">保存</button>
+                                </td>
+                            </div>
+                        </tr>
+                    </tbody>
+                </table>
+                </form>
+            </div>
+        </div>
+    </div>   
+   </section>
+</div>
+</body>
+</html>

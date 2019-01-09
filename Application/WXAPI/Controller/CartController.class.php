@@ -260,6 +260,7 @@ class CartController extends BaseController
         $pay_points = I("pay_points", 0); //  使用积分
         $user_money = I("user_money", 0); //  使用余额
         $user_money = $user_money ? $user_money : 0;
+        $is_peisong= I("is_peisong", 0); //  使用余额
         $user_note        = array(); // $user_note = I('user_note'); // 给卖家留言      数组形式
         
         $cv = $coupon_id;
@@ -272,12 +273,15 @@ class CartController extends BaseController
         $coupon_id = $coupon_array;
         //print_r($coupon_id);
         //return ;
-        if($this->cartLogic->cart_count($this->user_id,1) == 0 ) exit(json_encode(array('status'=>-1,'msg'=>'你的购物车没有选中商品','result'=>null))); // 返回结果状态
+
         if(!$address_id) exit(json_encode(array('status'=>-1,'msg'=>'请完善收货人信息','result'=>null))); // 返回结果状态
-        if(!$shipping_code) exit(json_encode(array('status'=>-1,'msg'=>'请选择物流信息','result'=>null))); // 返回结果状态
+//        if(!$shipping_code) exit(json_encode(array('status'=>-1,'msg'=>'请选择物流信息','result'=>null))); // 返回结果状态
         
         $address = M('UserAddress')->where("address_id = $address_id")->find();
         $order_goods = M('cart')->where("user_id = {$this->user_id} and selected = 1")->select();
+        if(empty($order_goods)){
+            exit(json_encode(array('status'=>-1,'msg'=>'你的购物车没有选中商品','result'=>null))); // 返回结果状态
+        }
         $result = calculate_price($this->user_id,$order_goods,$shipping_code,0,$address[province],$address[city],$address[district],$pay_points,$user_money,$coupon_id,$couponCode);
         //print_r($result);
         //return ;
@@ -308,7 +312,7 @@ class CartController extends BaseController
         // 提交订单        
         if ($_REQUEST['act'] == 'submit_order') {
             
-            $result = $this->cartLogic->addOrder($this->user_id, $address_id, $shipping_code, $invoice_title, $coupon_id, $car_price,$user_note); // 添加订单
+            $result = $this->cartLogic->addOrder($this->user_id, $address_id, $shipping_code, $invoice_title, $coupon_id, $car_price,$user_note,$is_peisong); // 添加订单
             $order = M('order')->where(array("master_order_sn"=>$result['result']))->select();
             $result['data'] = $this->getWXPayInfo($result['result']);
             $result['order'] = $order; 
@@ -619,6 +623,27 @@ class CartController extends BaseController
         }
         return $output;
     }
-    
+    //选择线下支付
+    public function xianxia_pay(){
+        $orderid=I('orderid');
+        $master_order_sn=I('master_order_sn');
+        $user_id=I('user_id');
+        if(!empty($orderid)){
+        $where=array(
+            "order_id" => $orderid);
+        }
+        if(!empty($master_order_sn)){
+            $where=array(
+                "master_order_sn" => $master_order_sn);
+        }
+
+        $res=M("order")->where($where)->field('user_id')->find();
+        if($res['user_id']!=$user_id){
+            exit(json_encode(array('status'=>-1,'msg'=>'参数错误','result'=>null))); // 返回结果状态
+        }
+        //修改支付方式为线下付款
+        M("order")->where($where)->save(array('pay_type'=>2));
+        exit(json_encode(array('status'=>1,'msg'=>'操作成功,等待商家确认','result'=>null))); // 返回结果状态
+    }
     
 }

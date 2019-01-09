@@ -559,7 +559,7 @@ function storeAccountLog($store_id, $store_money = 0,$pending_money,$desc = '',$
         'store_integral'    => $result_integral, // 未结算资金
         'change_time'   => time(),
         'desc'   => $desc,
-        'order_id'   => $order_id,        
+        'order_id'   => $order_id,
     );
     /* 更新用户信息 */
     $sql = "UPDATE __PREFIX__store SET store_money = store_money + $store_money," .
@@ -790,8 +790,15 @@ function update_pay_status($order_sn,$pay_status = 1)
 		if($count == 0) return false;
 		// 找出对应的订单
 		$order = M('order')->where("order_sn = '$order_sn'")->find();
-		// 修改支付状态  已支付
-		M('order')->where("order_sn = '$order_sn'")->save(array('pay_status'=>1,'pay_time'=>time()));
+        // 修改支付状态  已支付
+
+		if($order['pay_type']==2){
+            M('order')->where("order_sn = '$order_sn'")->save(array('pay_status'=>1,'pay_time'=>time(),'order_status'=>1));
+        }else{
+            M('order')->where("order_sn = '$order_sn'")->save(array('pay_status'=>1,'pay_time'=>time()));
+        }
+
+
 		// 减少对应商品的库存
 		minus_stock($order['order_id']);
 		// 给他升级, 根据order表查看消费记录 给他会员等级升级 修改他的折扣 和 总金额
@@ -1022,8 +1029,8 @@ function calculate_price($user_id=0,$order_goods,$shipping_code = array(),$shipp
         // 判断使用积分 余额
     if($pay_points && ($pay_points > $user['pay_points']))
         return array('status'=>-5,'msg'=>"你的账户可用积分为:".$user['pay_points'],'result'=>''); // 返回结果状态                
-    if($user_money  && ($user_money > $user['user_money']))
-        return array('status'=>-6,'msg'=>"你的账户可用余额为:".$user['user_money'],'result'=>''); // 返回结果状态
+//    if($user_money  && ($user_money > $user['user_money']))
+//        return array('status'=>-6,'msg'=>"你的账户可用余额为:".$user['user_money'],'result'=>''); // 返回结果状态
     
     $goods_id_arr = get_arr_column($order_goods,'goods_id');
     $goods_arr = M('goods')->where("goods_id in(".  implode(',',$goods_id_arr).")")->getField('goods_id,weight,market_price,is_free_shipping'); // 商品id 和重量对应的键值对
@@ -1031,10 +1038,10 @@ function calculate_price($user_id=0,$order_goods,$shipping_code = array(),$shipp
         foreach($order_goods as $key => $val)
         {       
 	    //如果商品不是包邮的
-            if($goods_arr[$val['goods_id']]['is_free_shipping'] == 0)
-            {
-                $store_goods_weight[$val['store_id']] += $goods_arr[$val['goods_id']]['weight'] * $val['goods_num']; //累积商品重量 每种商品的重量 * 数量
-            }	            				
+//            if($goods_arr[$val['goods_id']]['is_free_shipping'] == 0)
+//            {
+//                $store_goods_weight[$val['store_id']] += $goods_arr[$val['goods_id']]['weight'] * $val['goods_num']; //累积商品重量 每种商品的重量 * 数量
+//            }
             $order_goods[$key]['goods_fee'] = $val['goods_num'] * $val['member_goods_price'];    // 小计            
             $order_goods[$key]['store_count']  = getGoodNum($val['goods_id'],$val['spec_key']); // 最多可购买的库存数量        
             if($order_goods[$key]['store_count'] <= 0) 
@@ -1047,38 +1054,38 @@ function calculate_price($user_id=0,$order_goods,$shipping_code = array(),$shipp
         }        
          
         // 因为当前方法在没有user_id 的情况下也可以调用, 因此 需要判断用户id
-        if($user_id)
-        {
-            // 循环优惠券
-            foreach($coupon_id as $key => $value)            
-                $store_coupon_price[$key] = $cartLogic->getCouponMoney($user_id, $value,$key,1); // 下拉框方式选择优惠券            
-           
-            //循环优惠券码
-            foreach($couponCode as $key => $value)
-            {
-                if(empty($value))
-                    continue;
-                $coupon_result = $cartLogic->getCouponMoneyByCode($value,$store_goods_price[$key],$key); // 根据 优惠券 号码获取的优惠券             
-                if($coupon_result['status'] < 0) 
-                  return $coupon_result;
-                $store_coupon_price[$key] = $coupon_result['result'];               
-            }
-        }
+//        if($user_id)
+//        {
+//            // 循环优惠券
+//            foreach($coupon_id as $key => $value)
+//                $store_coupon_price[$key] = $cartLogic->getCouponMoney($user_id, $value,$key,1); // 下拉框方式选择优惠券
+//
+//            //循环优惠券码
+//            foreach($couponCode as $key => $value)
+//            {
+//                if(empty($value))
+//                    continue;
+//                $coupon_result = $cartLogic->getCouponMoneyByCode($value,$store_goods_price[$key],$key); // 根据 优惠券 号码获取的优惠券
+//                if($coupon_result['status'] < 0)
+//                  return $coupon_result;
+//                $store_coupon_price[$key] = $coupon_result['result'];
+//            }
+//        }
         // 所有 商家优惠券抵消金额
-        $coupon_price = array_sum($store_coupon_price); 
+//        $coupon_price = array_sum($store_coupon_price);
         
         // 计算每个商家的物流费                
-        foreach ($shipping_code as $key => $value) 
-        {
-            // 默认免邮费
-            $store_shipping_price[$key] = 0;            
-            // 超出该金额免运费， 店铺 设置 满多少 包邮 .
-            $store_free_price = M('store')->where("store_id = $key")->getField('store_free_price');            
-            // 如果没有设置满额包邮 或者 额度达不到包邮 则计算物流费
-            if($store_free_price == 0 || $store_goods_price[$key] < $store_free_price)            
-                $store_shipping_price[$key] = $cartLogic->cart_freight2($shipping_code[$key],$province,$city,$district,$store_goods_weight[$key],$key);
-        }        
-        $shipping_price = array_sum($store_shipping_price); // 所有 商家物流费
+//        foreach ($shipping_code as $key => $value)
+//        {
+//            // 默认免邮费
+//            $store_shipping_price[$key] = 0;
+//            // 超出该金额免运费， 店铺 设置 满多少 包邮 .
+//            $store_free_price = M('store')->where("store_id = $key")->getField('store_free_price');
+//            // 如果没有设置满额包邮 或者 额度达不到包邮 则计算物流费
+//            if($store_free_price == 0 || $store_goods_price[$key] < $store_free_price)
+//                $store_shipping_price[$key] = $cartLogic->cart_freight2($shipping_code[$key],$province,$city,$district,$store_goods_weight[$key],$key);
+//        }
+//        $shipping_price = array_sum($store_shipping_price); // 所有 商家物流费
         
         
         // 计算每个商家的应付金额
